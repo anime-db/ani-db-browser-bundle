@@ -141,7 +141,7 @@ class Browser
         if ($response->isError()) {
             throw new \RuntimeException("Failed execute request '{$request}' to the server '{$this->api_host}'");
         }
-        return new Crawler($response->getBody(true));
+        return new Crawler(gzdecode($response->getBody(true)));
     }
 
     /**
