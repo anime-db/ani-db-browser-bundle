@@ -151,8 +151,8 @@ class Browser
      *
      * @return string
      */
-    public function getImageUrl($iamge)
+    public function getImageUrl($image)
     {
-        return $this->image_prefix.$iamge;
+        return $this->image_prefix.$image;
     }
 }
