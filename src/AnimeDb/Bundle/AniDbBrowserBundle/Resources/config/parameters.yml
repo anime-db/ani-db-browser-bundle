@@ -1,7 +1,8 @@
 parameters:
-    anime_db.anidb.host: 'http://anidb.net'
-    anime_db.anidb.api.host: 'http://api.anidb.net:9001'
-    anime_db.anidb.api.prefix: '/httpapi'
-    anime_db.anidb.api.client: 'animedbplugin'
-    anime_db.anidb.api.clientver: 1
-    anime_db.anidb.api.protover: 1
+    anime_db.ani_db.host: 'http://anidb.net'
+    anime_db.ani_db.api.host: 'http://api.anidb.net:9001'
+    anime_db.ani_db.api.prefix: '/httpapi'
+    anime_db.ani_db.api.client: 'animedbplugin'
+    anime_db.ani_db.api.clientver: 1
+    anime_db.ani_db.api.protover: 1
+    anime_db.ani_db.image_prefix: 'http://img7.anidb.net/pics/anime/'

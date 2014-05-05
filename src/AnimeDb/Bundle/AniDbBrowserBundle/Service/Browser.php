@@ -46,6 +46,13 @@ class Browser
     private $api_prefix;
 
     /**
+     * Image URL prefix
+     *
+     * @var string
+     */
+    private $image_prefix;
+
+    /**
      * HTTP client
      *
      * @var \Guzzle\Http\Client
@@ -61,9 +68,17 @@ class Browser
      * @param string $api_client
      * @param string $api_clientver
      * @param string $api_protover
+     * @param string $image_prefix
      */
-    public function __construct($host, $api_host, $api_prefix, $api_client, $api_clientver, $api_protover)
-    {
+    public function __construct(
+        $host,
+        $api_host,
+        $api_prefix,
+        $api_client,
+        $api_clientver,
+        $api_protover,
+        $image_prefix
+    ) {
         $api_prefix .= strpos($api_prefix, '?') !== false ? '&' : '?';
         $api_prefix .= http_build_query([
             'client'    => $api_client,
@@ -73,6 +88,7 @@ class Browser
         $this->host = $host;
         $this->api_host = $api_host;
         $this->api_prefix = $api_prefix;
+        $this->image_prefix = $image_prefix;
     }
 
     /**
@@ -125,6 +141,20 @@ class Browser
         if ($response->isError()) {
             throw new \RuntimeException("Failed execute request '{$request}' to the server '{$this->api_host}'");
         }
-        return new Crawler($response->getBody(true));
+        $body = gzdecode($response->getBody(true));
+        $body = mb_convert_encoding($body, 'html-entities', 'utf-8');
+        return new Crawler($body);
+    }
+
+    /**
+     * Get image URL
+     *
+     * @param string $iamge
+     *
+     * @return string
+     */
+    public function getImageUrl($image)
+    {
+        return $this->image_prefix.$image;
     }
 }
