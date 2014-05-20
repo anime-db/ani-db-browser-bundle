@@ -4,7 +4,7 @@
     "type": "library",
     "description": "Plugin AniDB for the catalog Anime DB",
     "homepage": "http://github.com/anime-db/ani-db-browser-bundle",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "autoload": {
         "psr-0": { "AnimeDb\\Bundle\\AniDbBrowserBundle": "src/" }
     },
