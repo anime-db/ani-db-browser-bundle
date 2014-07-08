@@ -6,7 +6,10 @@
     "homepage": "http://github.com/anime-db/ani-db-browser-bundle",
     "version": "0.1.1",
     "autoload": {
-        "psr-0": { "AnimeDb\\Bundle\\AniDbBrowserBundle": "src/" }
+        "psr-4": {
+            "AnimeDb\\Bundle\\AniDbBrowserBundle\\": "src/",
+            "AnimeDb\\Bundle\\AniDbBrowserBundle\\Tests": "tests/"
+        }
     },
     "require": {
         "php": ">=5.4.0",

@@ -14,7 +14,7 @@
 
     <testsuites>
         <testsuite name="AniDbBrowserBundle Test Suite">
-            <directory>./src/*/Bundle/*Bundle/Tests</directory>
+            <directory>./tests/</directory>
         </testsuite>
     </testsuites>
 </phpunit>
