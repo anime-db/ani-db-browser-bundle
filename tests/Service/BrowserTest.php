@@ -77,6 +77,13 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     protected $client;
 
     /**
+     * Crawler
+     *
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $crawler;
+
+    /**
      * (non-PHPdoc)
      * @see PHPUnit_Framework_TestCase::setUp()
      */
@@ -87,8 +94,14 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->crawler = $this
+            ->getMockBuilder('\Symfony\Component\DomCrawler\Crawler')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->browser = new Browser(
             $this->client,
+            $this->crawler,
             $this->host,
             $this->api_prefix,
             $this->api_client,

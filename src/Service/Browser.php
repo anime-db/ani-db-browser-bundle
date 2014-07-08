@@ -59,9 +59,17 @@ class Browser
     private $client;
 
     /**
+     * Crawler
+     *
+     * @var \Symfony\Component\DomCrawler\Crawler
+     */
+    private $crawler;
+
+    /**
      * Construct
      *
      * @param \Guzzle\Http\Client $client
+     * @param \Symfony\Component\DomCrawler\Crawler $crawler
      * @param string $host
      * @param string $api_prefix
      * @param string $api_client
@@ -71,6 +79,7 @@ class Browser
      */
     public function __construct(
         Client $client,
+        Crawler $crawler,
         $host,
         $api_prefix,
         $api_client,
@@ -79,6 +88,7 @@ class Browser
         $image_prefix
     ) {
         $this->client = $client;
+        $this->crawler = $crawler;
         $api_prefix .= strpos($api_prefix, '?') !== false ? '&' : '?';
         $api_prefix .= http_build_query([
             'client'    => $api_client,
@@ -129,7 +139,8 @@ class Browser
         }
         $body = gzdecode($response->getBody(true));
         $body = mb_convert_encoding($body, 'html-entities', 'utf-8');
-        return new Crawler($body);
+        $crawler = clone $this->crawler;
+        return $crawler->add($body);
     }
 
     /**
