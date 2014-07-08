@@ -10,7 +10,6 @@
 
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Service;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DomCrawler\Crawler;
 use Guzzle\Http\Client;
 
@@ -30,13 +29,6 @@ class Browser
      * @var string
      */
     private $host;
-
-    /**
-     * API host
-     *
-     * @var string
-     */
-    private $api_host;
 
     /**
      * API path prefix
@@ -69,25 +61,24 @@ class Browser
     /**
      * Construct
      *
+     * @param \Guzzle\Http\Client $client
      * @param string $host
-     * @param string $api_host
      * @param string $api_prefix
      * @param string $api_client
      * @param string $api_clientver
      * @param string $api_protover
-     * @param string $app_code
      * @param string $image_prefix
      */
     public function __construct(
+        Client $client,
         $host,
-        $api_host,
         $api_prefix,
         $api_client,
         $api_clientver,
         $api_protover,
-        $app_code,
         $image_prefix
     ) {
+        $this->client = $client;
         $api_prefix .= strpos($api_prefix, '?') !== false ? '&' : '?';
         $api_prefix .= http_build_query([
             'client'    => $api_client,
@@ -95,24 +86,8 @@ class Browser
             'protover'  => $api_protover
         ]);
         $this->host = $host;
-        $this->api_host = $api_host;
         $this->api_prefix = $api_prefix;
-        $this->app_code = $app_code;
         $this->image_prefix = $image_prefix;
-    }
-
-    /**
-     * Get HTTP client
-     *
-     * @param \Guzzle\Http\Client
-     */
-    protected function getClient()
-    {
-        if (!($this->client instanceof Client)) {
-            $this->client = new Client($this->api_host);
-            $this->client->setDefaultHeaders(['User-Agent' => $this->app_code]);
-        }
-        return $this->client;
     }
 
     /**
@@ -132,7 +107,7 @@ class Browser
      */
     public function getApiHost()
     {
-        return $this->api_host;
+        return $this->client->getBaseUrl();
     }
 
     /**
