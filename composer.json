@@ -8,7 +8,7 @@
     "autoload": {
         "psr-4": {
             "AnimeDb\\Bundle\\AniDbBrowserBundle\\": "src/",
-            "AnimeDb\\Bundle\\AniDbBrowserBundle\\Tests": "tests/"
+            "AnimeDb\\Bundle\\AniDbBrowserBundle\\Tests\\": "tests/"
         }
     },
     "require": {
