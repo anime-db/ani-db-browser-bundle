@@ -132,10 +132,9 @@ class Browser
     {
         $path = $this->api_prefix.'&request='.$request.($params ? '&'.http_build_query($params) : '');
 
-        /* @var $response \Guzzle\Http\Message\Response */
-        $response = $this->getClient()->get($path)->send();
+        $response = $this->client->get($path)->send();
         if ($response->isError()) {
-            throw new \RuntimeException("Failed execute request '{$request}' to the server '{$this->api_host}'");
+            throw new \RuntimeException("Failed execute request '{$request}' to the server '".$this->getApiHost()."'");
         }
         $body = gzdecode($response->getBody(true));
         $body = mb_convert_encoding($body, 'html-entities', 'utf-8');
