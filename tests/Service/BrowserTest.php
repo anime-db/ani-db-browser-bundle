@@ -138,4 +138,54 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('foo'));
         $this->assertEquals('foo', $this->browser->getApiHost());
     }
+
+    /**
+     * Test get failed transport
+     *
+     * @expectedException RuntimeException
+     */
+    public function testGetFailedTransport()
+    {
+        $this->buildDialogue('foo', ['bar' => 'baz'], true);
+        $this->browser->get('foo', ['bar' => 'baz']);
+    }
+
+    /**
+     * Build client dialogue
+     *
+     * @param string $request
+     * @param array $params
+     * @param boolean $is_error
+     */
+    protected function buildDialogue($request, array $params, $is_error = false)
+    {
+        $req = $this->getMock('\Guzzle\Http\Message\RequestInterface');
+        $response = $this
+            ->getMockBuilder('\Guzzle\Http\Message\Response')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->client
+            ->expects($this->once())
+            ->method('get')
+            ->with(
+                $this->api_prefix.
+                (strpos($this->api_prefix, '?') !== false ? '&' : '?').
+                http_build_query(array_merge([
+                    'client'    => $this->api_client,
+                    'clientver' => $this->api_clientver,
+                    'protover'  => $this->api_protover,
+                    'request'   => $request
+                ], $params))
+            )
+            ->will($this->returnValue($req));
+        $req
+            ->expects($this->once())
+            ->method('send')
+            ->will($this->returnValue($response));
+        $response
+            ->expects($this->once())
+            ->method('isError')
+            ->will($this->returnValue($is_error));
+    }
 }
