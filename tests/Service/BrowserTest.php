@@ -105,4 +105,24 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals($this->image_prefix.'foo', $this->browser->getImageUrl('foo'));
     }
+
+    /**
+     * Test get host
+     */
+    public function testGetHost()
+    {
+        $this->assertEquals($this->host, $this->browser->getHost());
+    }
+
+    /**
+     * Test get api host
+     */
+    public function testGetApiHost()
+    {
+        $this->client
+            ->expects($this->once())
+            ->method('getBaseUrl')
+            ->will($this->returnValue('foo'));
+        $this->assertEquals('foo', $this->browser->getApiHost());
+    }
 }
