@@ -9,7 +9,10 @@
         "psr-0": { "AnimeDb\\Bundle\\AniDbBrowserBundle": "src/" }
     },
     "require": {
-        "php": ">=5.4.0"
+        "php": ">=5.4.0",
+        "ext-mbstring": "*",
+        "ext-zlib": "*",
+        "guzzle/guzzle": "3.9.*"
     },
     "minimum-stability": "dev"
 }
