@@ -13,7 +13,6 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "ext-mbstring": "*",
         "ext-zlib": "*",
         "guzzle/guzzle": "3.9.*",
         "symfony/dom-crawler": ">=2.3.17"
