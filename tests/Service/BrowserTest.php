@@ -151,6 +151,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $result = $this->browser->get('foo', array('bar' => 'baz'));
 
         $this->assertInstanceOf('\Symfony\Component\DomCrawler\Crawler', $result);
+        // objects are not identical, but their content should match
         $this->assertEquals($expected->html(), $result->html());
     }
 
