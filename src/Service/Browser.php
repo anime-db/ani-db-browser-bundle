@@ -127,7 +127,6 @@ class Browser
             throw new \RuntimeException("Failed execute request '{$request}' to the server '".$this->getApiHost()."'");
         }
         $body = gzdecode($response->getBody(true));
-        $body = mb_convert_encoding($body, 'html-entities', 'utf-8');
         return new Crawler($body);
     }
 
