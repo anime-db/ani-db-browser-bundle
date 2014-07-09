@@ -134,8 +134,8 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetFailedTransport()
     {
-        $this->buildDialogue('foo', ['bar' => 'baz']);
-        $this->browser->get('foo', ['bar' => 'baz']);
+        $this->buildDialogue('foo', array('bar' => 'baz'));
+        $this->browser->get('foo', array('bar' => 'baz'));
     }
 
     /**
@@ -144,10 +144,14 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     public function testGet()
     {
         $xml = '<?xml version="1.0"?><root><text>Hello, world!</text></root>';
-        $this->buildDialogue('foo', ['bar' => 'baz'], gzencode($xml));
-        $result = $this->browser->get('foo', ['bar' => 'baz']);
+        $expected = new Crawler($xml);
+
+        $this->buildDialogue('foo', array('bar' => 'baz'), gzencode($xml));
+
+        $result = $this->browser->get('foo', array('bar' => 'baz'));
+
         $this->assertInstanceOf('\Symfony\Component\DomCrawler\Crawler', $result);
-        $this->assertEquals((new Crawler($xml))->html(), $result->html());
+        $this->assertEquals($expected->html(), $result->html());
     }
 
     /**
@@ -171,12 +175,12 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->with(
                 $this->api_prefix.
                 (strpos($this->api_prefix, '?') !== false ? '&' : '?').
-                http_build_query(array_merge([
+                http_build_query(array_merge(array(
                     'client'    => $this->api_client,
                     'clientver' => $this->api_clientver,
                     'protover'  => $this->api_protover,
                     'request'   => $request
-                ], $params))
+                ), $params))
             )
             ->will($this->returnValue($req));
         $req
