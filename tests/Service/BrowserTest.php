@@ -11,6 +11,7 @@
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Service\Tests;
 
 use AnimeDb\Bundle\AniDbBrowserBundle\Service\Browser;
+use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * Test browser
@@ -133,8 +134,20 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetFailedTransport()
     {
-        $this->buildDialogue('foo', ['bar' => 'baz'], true);
+        $this->buildDialogue('foo', ['bar' => 'baz']);
         $this->browser->get('foo', ['bar' => 'baz']);
+    }
+
+    /**
+     * Test get
+     */
+    public function testGet()
+    {
+        $xml = '<?xml version="1.0"?><root><text>Hello, world!</text></root>';
+        $this->buildDialogue('foo', ['bar' => 'baz'], gzencode($xml));
+        $result = $this->browser->get('foo', ['bar' => 'baz']);
+        $this->assertInstanceOf('\Symfony\Component\DomCrawler\Crawler', $result);
+        $this->assertEquals((new Crawler($xml))->html(), $result->html());
     }
 
     /**
@@ -142,9 +155,9 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
      *
      * @param string $request
      * @param array $params
-     * @param boolean $is_error
+     * @param string|boolean $data
      */
-    protected function buildDialogue($request, array $params, $is_error = false)
+    protected function buildDialogue($request, array $params, $data = false)
     {
         $req = $this->getMock('\Guzzle\Http\Message\RequestInterface');
         $response = $this
@@ -173,6 +186,13 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $response
             ->expects($this->once())
             ->method('isError')
-            ->will($this->returnValue($is_error));
+            ->will($this->returnValue(!$data));
+        if ($data) {
+            $response
+                ->expects($this->once())
+                ->method('getBody')
+                ->with(true)
+                ->will($this->returnValue($data));
+        }
     }
 }
