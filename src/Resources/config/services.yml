@@ -16,3 +16,8 @@ services:
         calls:
             - [ setDefaultHeaders, [ ["User-Agent": %anime_db.ani_db.app_code%] ] ]
         public: false
+
+    anime_db.ani_db.browser.cache:
+        class: AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse
+        arguments: [ %anime_db.ani_db.cache_response_dir% ]
+        public: false
