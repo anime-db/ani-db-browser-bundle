@@ -161,7 +161,7 @@ class Browser
     /**
      * Get image URL
      *
-     * @param string $iamge
+     * @param string $image
      *
      * @return string
      */
