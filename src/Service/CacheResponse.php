@@ -63,28 +63,14 @@ class CacheResponse
      */
     public function set($request, $url, $response)
     {
-        switch ($request) {
-            case 'anime':
-                $expires = strtotime('+1 week');
-                break;
-            case 'categorylist':
-                $expires = strtotime('+6 month');
-                break;
-            case 'randomrecommendation':
-            case 'randomsimilar':
-            case 'mylistsummary':
-                return; // no cache
-            case 'hotanime':
-            case 'main':
-            default:
-                $expires = strtotime('+1 day');
+        if ($expires = $this->getRequestExpires($request)) {
+            if (!is_dir($this->cache_dir)) {
+                mkdir($this->cache_dir, 0755, true);
+            }
+            $filename = $this->getFilename($url);
+            file_put_contents($filename, $response);
+            touch($filename, $expires);
         }
-        if (!is_dir($this->cache_dir)) {
-            mkdir($this->cache_dir, 0755, true);
-        }
-        $filename = $this->getFilename($url);
-        file_put_contents($filename, $response);
-        touch($filename, $expires);
     }
 
     /**
@@ -97,5 +83,32 @@ class CacheResponse
     protected function getFilename($url)
     {
         return $this->cache_dir.md5($url).'.xml';
+    }
+
+    /**
+     * Get cache request expires
+     *
+     * @link http://wiki.anidb.net/w/HTTP_API_Definition
+     *
+     * @param string $request
+     *
+     * @return integer
+     */
+    protected function getRequestExpires($request)
+    {
+        switch ($request) {
+            case 'anime':
+                return strtotime('+1 week');
+            case 'categorylist':
+                return strtotime('+6 month');
+            case 'randomrecommendation':
+            case 'randomsimilar':
+            case 'mylistsummary':
+                return 0; // no cache
+            case 'hotanime':
+            case 'main':
+            default:
+                return strtotime('+1 day');
+        }
     }
 }
