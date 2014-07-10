@@ -64,6 +64,13 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     protected $image_prefix = 'image_prefix';
 
     /**
+     * XML
+     *
+     * @var string
+     */
+    protected $xml = '<?xml version="1.0"?><root><text>Hello, world!</text></root>';
+
+    /**
      * Browser
      *
      * @var \AnimeDb\Bundle\AniDbBrowserBundle\Service\Browser
@@ -78,6 +85,13 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     protected $client;
 
     /**
+     * Cache
+     *
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $cache;
+
+    /**
      * (non-PHPdoc)
      * @see PHPUnit_Framework_TestCase::setUp()
      */
@@ -85,6 +99,11 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     {
         $this->client = $this
             ->getMockBuilder('\Guzzle\Http\Client')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->cache = $this
+            ->getMockBuilder('\AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -143,10 +162,9 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
      */
     public function testGet()
     {
-        $xml = '<?xml version="1.0"?><root><text>Hello, world!</text></root>';
-        $expected = new Crawler($xml);
+        $expected = new Crawler($this->xml);
 
-        $this->buildDialogue('foo', array('bar' => 'baz'), gzencode($xml));
+        $this->buildDialogue('foo', array('bar' => 'baz'), gzencode($this->xml));
 
         $result = $this->browser->get('foo', array('bar' => 'baz'));
 
@@ -173,16 +191,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $this->client
             ->expects($this->once())
             ->method('get')
-            ->with(
-                $this->api_prefix.
-                (strpos($this->api_prefix, '?') !== false ? '&' : '?').
-                http_build_query(array_merge(array(
-                    'client'    => $this->api_client,
-                    'clientver' => $this->api_clientver,
-                    'protover'  => $this->api_protover,
-                    'request'   => $request
-                ), $params))
-            )
+            ->with($this->getUrl($request, $params))
             ->will($this->returnValue($req));
         $req
             ->expects($this->once())
@@ -199,5 +208,61 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
                 ->with(true)
                 ->will($this->returnValue($data));
         }
+    }
+
+    /**
+     * Get URL
+     *
+     * @param string $request
+     * @param array $params
+     *
+     * @return string
+     */
+    protected function getUrl($request, array $params)
+    {
+        return $this->api_prefix.
+            (strpos($this->api_prefix, '?') !== false ? '&' : '?').
+            http_build_query(array_merge(array(
+                'client'    => $this->api_client,
+                'clientver' => $this->api_clientver,
+                'protover'  => $this->api_protover,
+                'request'   => $request
+            ), $params));
+    }
+
+    /**
+     * Test get force
+     */
+    public function testGetForce()
+    {
+        $this->cache
+            ->expects($this->never())
+            ->method('get');
+        $this->cache
+            ->expects($this->once())
+            ->method('set')
+            ->with('foo', $this->getUrl('foo', array('bar' => 'baz')), $this->xml);
+
+        $this->browser->setResponseCache($this->cache);
+        $this->buildDialogue('foo', array('bar' => 'baz'), gzencode($this->xml));
+        $this->browser->get('foo', array('bar' => 'baz'), true);
+    }
+
+    /**
+     * Test get from cache
+     */
+    public function testGetFromCache()
+    {
+        $this->cache
+            ->expects($this->once())
+            ->method('get')
+            ->with($this->getUrl('foo', array('bar' => 'baz')))
+            ->will($this->returnValue($this->xml));
+        $this->cache
+            ->expects($this->never())
+            ->method('set');
+
+        $this->browser->setResponseCache($this->cache);
+        $this->browser->get('foo', array('bar' => 'baz'));
     }
 }
