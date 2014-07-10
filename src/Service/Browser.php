@@ -10,6 +10,7 @@
 
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Service;
 
+use AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse;
 use Symfony\Component\DomCrawler\Crawler;
 use Guzzle\Http\Client;
 
@@ -57,6 +58,13 @@ class Browser
      * @var \Guzzle\Http\Client
      */
     private $client;
+
+    /**
+     * Cache response data
+     *
+     * @var \AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse
+     */
+    private $cache;
 
     /**
      * Construct
@@ -111,23 +119,43 @@ class Browser
     }
 
     /**
+     * Set response cache
+     *
+     * @param \AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse $cache
+     */
+    public function setResponseCache(CacheResponse $cache)
+    {
+        $this->cache = $cache;
+    }
+
+    /**
      * Get data
      *
      * @param string $request
      * @param array $params
+     * @param boolean $force
      *
      * @return \Symfony\Component\DomCrawler\Crawler
      */
-    public function get($request, array $params = array())
+    public function get($request, array $params = array(), $force = false)
     {
         $path = $this->api_prefix.'&request='.$request.($params ? '&'.http_build_query($params) : '');
 
-        $response = $this->client->get($path)->send();
-        if ($response->isError()) {
-            throw new \RuntimeException("Failed execute request '{$request}' to the server '".$this->getApiHost()."'");
+        // try get response from cache
+        if ($force || !($this->cache instanceof CacheResponse) || !($response = $this->cache->get($path))) {
+            $response = $this->client->get($path)->send();
+            if ($response->isError()) {
+                throw new \RuntimeException("Failed execute request '{$request}' to the server '".$this->getApiHost()."'");
+            }
+            $response = gzdecode($response->getBody(true));
+
+            // cache response
+            if ($this->cache instanceof CacheResponse) {
+                $this->cache->set($request, $path, $response);
+            }
         }
-        $body = gzdecode($response->getBody(true));
-        return new Crawler($body);
+
+        return new Crawler($response);
     }
 
     /**

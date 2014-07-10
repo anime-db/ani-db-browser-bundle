@@ -9,6 +9,8 @@ services:
             - %anime_db.ani_db.api.clientver%
             - %anime_db.ani_db.api.protover%
             - %anime_db.ani_db.image_prefix%
+        calls:
+            - [ setResponseCache, [ @anime_db.ani_db.browser.cache ] ]
 
     anime_db.ani_db.browser.client:
         class: Guzzle\Http\Client
