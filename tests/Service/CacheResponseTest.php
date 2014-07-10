@@ -114,11 +114,11 @@ class CacheResponseTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetNoCache()
     {
-        $requests = array(
+        $requests = [
             'randomrecommendation',
             'randomsimilar',
             'mylistsummary'
-        );
+        ];
         foreach ($requests as $request) {
             $this->cache->set($request, 'foo', 'bar');
             $this->assertFalse(file_exists($this->filename));
@@ -131,13 +131,13 @@ class CacheResponseTest extends \PHPUnit_Framework_TestCase
     public function testSet()
     {
         $this->tearDown(); // remove dir
-        $requests = array(
+        $requests = [
             'anime' => '+1 week',
             'categorylist' => '+6 month',
             'hotanime' => '+1 day',
             'main' => '+1 day',
             'baz' => '+1 day',
-        );
+        ];
         foreach ($requests as $request => $expires) {
             $this->cache->set($request, 'foo', 'bar');
             $this->assertEquals(strtotime($expires), filemtime($this->filename));

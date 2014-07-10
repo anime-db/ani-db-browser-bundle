@@ -153,8 +153,8 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetFailedTransport()
     {
-        $this->buildDialogue('foo', array('bar' => 'baz'));
-        $this->browser->get('foo', array('bar' => 'baz'));
+        $this->buildDialogue('foo', ['bar' => 'baz']);
+        $this->browser->get('foo', ['bar' => 'baz']);
     }
 
     /**
@@ -164,9 +164,9 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     {
         $expected = new Crawler($this->xml);
 
-        $this->buildDialogue('foo', array('bar' => 'baz'), gzencode($this->xml));
+        $this->buildDialogue('foo', ['bar' => 'baz'], gzencode($this->xml));
 
-        $result = $this->browser->get('foo', array('bar' => 'baz'));
+        $result = $this->browser->get('foo', ['bar' => 'baz']);
 
         $this->assertInstanceOf('\Symfony\Component\DomCrawler\Crawler', $result);
         // objects are not identical, but their content should match
@@ -222,12 +222,12 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     {
         return $this->api_prefix.
             (strpos($this->api_prefix, '?') !== false ? '&' : '?').
-            http_build_query(array_merge(array(
+            http_build_query(array_merge([
                 'client'    => $this->api_client,
                 'clientver' => $this->api_clientver,
                 'protover'  => $this->api_protover,
                 'request'   => $request
-            ), $params));
+            ], $params));
     }
 
     /**
@@ -241,11 +241,11 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $this->cache
             ->expects($this->once())
             ->method('set')
-            ->with('foo', $this->getUrl('foo', array('bar' => 'baz')), $this->xml);
+            ->with('foo', $this->getUrl('foo', ['bar' => 'baz']), $this->xml);
 
         $this->browser->setResponseCache($this->cache);
-        $this->buildDialogue('foo', array('bar' => 'baz'), gzencode($this->xml));
-        $this->browser->get('foo', array('bar' => 'baz'), true);
+        $this->buildDialogue('foo', ['bar' => 'baz'], gzencode($this->xml));
+        $this->browser->get('foo', ['bar' => 'baz'], true);
     }
 
     /**
@@ -256,13 +256,13 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $this->cache
             ->expects($this->once())
             ->method('get')
-            ->with($this->getUrl('foo', array('bar' => 'baz')))
+            ->with($this->getUrl('foo', ['bar' => 'baz']))
             ->will($this->returnValue($this->xml));
         $this->cache
             ->expects($this->never())
             ->method('set');
 
         $this->browser->setResponseCache($this->cache);
-        $this->browser->get('foo', array('bar' => 'baz'));
+        $this->browser->get('foo', ['bar' => 'baz']);
     }
 }

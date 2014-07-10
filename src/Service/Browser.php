@@ -88,11 +88,11 @@ class Browser
     ) {
         $this->client = $client;
         $api_prefix .= strpos($api_prefix, '?') !== false ? '&' : '?';
-        $api_prefix .= http_build_query(array(
+        $api_prefix .= http_build_query([
             'client'    => $api_client,
             'clientver' => $api_clientver,
             'protover'  => $api_protover
-        ));
+        ]);
         $this->host = $host;
         $this->api_prefix = $api_prefix;
         $this->image_prefix = $image_prefix;
@@ -137,7 +137,7 @@ class Browser
      *
      * @return \Symfony\Component\DomCrawler\Crawler
      */
-    public function get($request, array $params = array(), $force = false)
+    public function get($request, array $params = [], $force = false)
     {
         $path = $this->api_prefix.'&request='.$request.($params ? '&'.http_build_query($params) : '');
 
