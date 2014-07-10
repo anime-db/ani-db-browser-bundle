@@ -80,7 +80,7 @@ class CacheResponse
                 $expires = strtotime('+1 day');
         }
         if (!is_dir($this->cache_dir)) {
-            mkdir($this->cache_dir, 755, true);
+            mkdir($this->cache_dir, 0755, true);
         }
         $filename = $this->getFilename($url);
         file_put_contents($filename, $response);
