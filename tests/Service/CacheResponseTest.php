@@ -138,6 +138,7 @@ class CacheResponseTest extends \PHPUnit_Framework_TestCase
             'main' => '+1 day',
             'baz' => '+1 day',
         ];
+
         foreach ($requests as $request => $expires) {
             $this->cache->set($request, 'foo', 'bar');
             $this->assertEquals(strtotime($expires), filemtime($this->filename));

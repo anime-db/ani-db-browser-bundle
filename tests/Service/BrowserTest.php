@@ -162,14 +162,11 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
      */
     public function testGet()
     {
-        $expected = new Crawler($this->xml);
-
         $this->buildDialogue('foo', ['bar' => 'baz'], gzencode($this->xml));
-
         $result = $this->browser->get('foo', ['bar' => 'baz']);
-
         $this->assertInstanceOf('\Symfony\Component\DomCrawler\Crawler', $result);
         // objects are not identical, but their content should match
+        $expected = new Crawler($this->xml);
         $this->assertEquals($expected->html(), $result->html());
     }
 
