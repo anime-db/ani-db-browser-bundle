@@ -92,18 +92,36 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     protected $cache;
 
     /**
+     * Request
+     *
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $request;
+
+    /**
+     * Response
+     *
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $response;
+
+    /**
      * (non-PHPdoc)
      * @see PHPUnit_Framework_TestCase::setUp()
      */
-    public function setUp()
+    protected function setUp()
     {
         $this->client = $this
             ->getMockBuilder('\Guzzle\Http\Client')
             ->disableOriginalConstructor()
             ->getMock();
-
         $this->cache = $this
             ->getMockBuilder('\AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->request = $this->getMock('\Guzzle\Http\Message\RequestInterface');
+        $this->response = $this
+            ->getMockBuilder('\Guzzle\Http\Message\Response')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -162,7 +180,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
      */
     public function testGet()
     {
-        $this->buildDialogue('foo', ['bar' => 'baz'], gzencode($this->xml));
+        $this->buildDialogue('foo', ['bar' => 'baz'], $this->xml);
         $result = $this->browser->get('foo', ['bar' => 'baz']);
         $this->assertInstanceOf('\Symfony\Component\DomCrawler\Crawler', $result);
         // objects are not identical, but their content should match
@@ -179,31 +197,25 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
      */
     protected function buildDialogue($request, array $params, $data = false)
     {
-        $req = $this->getMock('\Guzzle\Http\Message\RequestInterface');
-        $response = $this
-            ->getMockBuilder('\Guzzle\Http\Message\Response')
-            ->disableOriginalConstructor()
-            ->getMock();
-
         $this->client
             ->expects($this->once())
             ->method('get')
             ->with($this->getUrl($request, $params))
-            ->will($this->returnValue($req));
-        $req
+            ->will($this->returnValue($this->request));
+        $this->request
             ->expects($this->once())
             ->method('send')
-            ->will($this->returnValue($response));
-        $response
+            ->will($this->returnValue($this->response));
+        $this->response
             ->expects($this->once())
             ->method('isError')
             ->will($this->returnValue(!$data));
         if ($data) {
-            $response
+            $this->response
                 ->expects($this->once())
                 ->method('getBody')
                 ->with(true)
-                ->will($this->returnValue($data));
+                ->will($this->returnValue(gzencode($data)));
         }
     }
 
@@ -241,7 +253,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->with('foo', $this->getUrl('foo', ['bar' => 'baz']), $this->xml);
 
         $this->browser->setResponseCache($this->cache);
-        $this->buildDialogue('foo', ['bar' => 'baz'], gzencode($this->xml));
+        $this->buildDialogue('foo', ['bar' => 'baz'], $this->xml);
         $this->browser->get('foo', ['bar' => 'baz'], true);
     }
 
