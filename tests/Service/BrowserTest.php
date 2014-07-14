@@ -193,9 +193,9 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
      *
      * @param string $request
      * @param array $params
-     * @param string|boolean $data
+     * @param string $data
      */
-    protected function buildDialogue($request, array $params, $data = false)
+    protected function buildDialogue($request, array $params, $data = '')
     {
         $this->client
             ->expects($this->once())
