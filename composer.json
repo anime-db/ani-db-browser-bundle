@@ -14,7 +14,7 @@
     "require": {
         "php": ">=5.4.0",
         "ext-zlib": "*",
-        "guzzle/guzzle": "3.9.*",
+        "guzzle/guzzle": ">=3.9.*",
         "symfony/dom-crawler": ">=2.3.17"
     },
     "minimum-stability": "dev"
