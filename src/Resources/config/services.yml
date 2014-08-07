@@ -2,7 +2,7 @@ services:
     anime_db.ani_db.browser:
         class: AnimeDb\Bundle\AniDbBrowserBundle\Service\Browser
         arguments:
-            - @anime_db.shikimori.browser.client
+            - @anime_db.ani_db.browser.client
             - %anime_db.ani_db.host%
             - %anime_db.ani_db.api.prefix%
             - %anime_db.ani_db.api.client%
