@@ -124,6 +124,10 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->getMockBuilder('\Guzzle\Http\Message\Response')
             ->disableOriginalConstructor()
             ->getMock();
+        $this->client
+            ->expects($this->once())
+            ->method('setDefaultHeaders')
+            ->with(['User-Agent' => 'app-code']);
 
         $this->browser = new Browser(
             $this->client,
@@ -132,6 +136,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             $this->api_client,
             $this->api_clientver,
             $this->api_protover,
+            'app-code',
             $this->image_prefix
         );
     }

@@ -75,6 +75,7 @@ class Browser
      * @param string $api_client
      * @param string $api_clientver
      * @param string $api_protover
+     * @param string $api_code
      * @param string $image_prefix
      */
     public function __construct(
@@ -84,9 +85,11 @@ class Browser
         $api_client,
         $api_clientver,
         $api_protover,
+        $app_code,
         $image_prefix
     ) {
         $this->client = $client;
+        $this->client->setDefaultHeaders(['User-Agent' => $app_code]);
         $api_prefix .= strpos($api_prefix, '?') !== false ? '&' : '?';
         $api_prefix .= http_build_query([
             'client'    => $api_client,

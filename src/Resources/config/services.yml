@@ -15,8 +15,6 @@ services:
     anime_db.ani_db.browser.client:
         class: Guzzle\Http\Client
         arguments: [ %anime_db.ani_db.api.host% ]
-        calls:
-            - [ setDefaultHeaders, [ ["User-Agent": %anime_db.ani_db.app_code%] ] ]
         public: false
 
     anime_db.ani_db.browser.cache:
