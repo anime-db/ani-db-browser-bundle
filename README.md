@@ -1,4 +1,4 @@
-<img src="http://anime-db.org/bundles/animedboffsite/images/anidb.net.png" /><br />
+![Browser for AniDB.net](http://anime-db.org/bundles/animedboffsite/images/anidb.net.png)
 
 [![Latest Stable Version](https://poser.pugx.org/anime-db/ani-db-browser-bundle/v/stable.png)](https://packagist.org/packages/anime-db/ani-db-browser-bundle)
 [![Latest Unstable Version](https://poser.pugx.org/anime-db/ani-db-browser-bundle/v/unstable.png)](https://packagist.org/packages/anime-db/ani-db-browser-bundle)
