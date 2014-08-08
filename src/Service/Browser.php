@@ -10,7 +10,7 @@
 
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Service;
 
-use Symfony\Component\HttpFoundation\Request;
+use AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse;
 use Symfony\Component\DomCrawler\Crawler;
 use Guzzle\Http\Client;
 
@@ -30,13 +30,6 @@ class Browser
      * @var string
      */
     private $host;
-
-    /**
-     * API host
-     *
-     * @var string
-     */
-    private $api_host;
 
     /**
      * API path prefix
@@ -67,10 +60,17 @@ class Browser
     private $client;
 
     /**
+     * Cache response data
+     *
+     * @var \AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse
+     */
+    private $cache;
+
+    /**
      * Construct
      *
+     * @param \Guzzle\Http\Client $client
      * @param string $host
-     * @param string $api_host
      * @param string $api_prefix
      * @param string $api_client
      * @param string $api_clientver
@@ -79,8 +79,8 @@ class Browser
      * @param string $image_prefix
      */
     public function __construct(
+        Client $client,
         $host,
-        $api_host,
         $api_prefix,
         $api_client,
         $api_clientver,
@@ -88,6 +88,7 @@ class Browser
         $app_code,
         $image_prefix
     ) {
+        $this->client = $client;
         $api_prefix .= strpos($api_prefix, '?') !== false ? '&' : '?';
         $api_prefix .= http_build_query([
             'client'    => $api_client,
@@ -95,24 +96,9 @@ class Browser
             'protover'  => $api_protover
         ]);
         $this->host = $host;
-        $this->api_host = $api_host;
         $this->api_prefix = $api_prefix;
         $this->app_code = $app_code;
         $this->image_prefix = $image_prefix;
-    }
-
-    /**
-     * Get HTTP client
-     *
-     * @param \Guzzle\Http\Client
-     */
-    protected function getClient()
-    {
-        if (!($this->client instanceof Client)) {
-            $this->client = new Client($this->api_host);
-            $this->client->setDefaultHeaders(['User-Agent' => $this->app_code]);
-        }
-        return $this->client;
     }
 
     /**
@@ -132,7 +118,17 @@ class Browser
      */
     public function getApiHost()
     {
-        return $this->api_host;
+        return $this->client->getBaseUrl();
+    }
+
+    /**
+     * Set response cache
+     *
+     * @param \AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse $cache
+     */
+    public function setResponseCache(CacheResponse $cache)
+    {
+        $this->cache = $cache;
     }
 
     /**
@@ -140,27 +136,35 @@ class Browser
      *
      * @param string $request
      * @param array $params
+     * @param boolean $force
      *
      * @return \Symfony\Component\DomCrawler\Crawler
      */
-    public function get($request, array $params = [])
+    public function get($request, array $params = [], $force = false)
     {
         $path = $this->api_prefix.'&request='.$request.($params ? '&'.http_build_query($params) : '');
 
-        /* @var $response \Guzzle\Http\Message\Response */
-        $response = $this->getClient()->get($path)->send();
-        if ($response->isError()) {
-            throw new \RuntimeException("Failed execute request '{$request}' to the server '{$this->api_host}'");
+        // try get response from cache
+        if ($force || !($this->cache instanceof CacheResponse) || !($response = $this->cache->get($path))) {
+            $response = $this->client->get($path)->setHeader('User-Agent', $this->app_code)->send();
+            if ($response->isError()) {
+                throw new \RuntimeException("Failed execute request '{$request}' to the server '".$this->getApiHost()."'");
+            }
+            $response = gzdecode($response->getBody(true));
+
+            // cache response
+            if ($this->cache instanceof CacheResponse) {
+                $this->cache->set($request, $path, $response);
+            }
         }
-        $body = gzdecode($response->getBody(true));
-        $body = mb_convert_encoding($body, 'html-entities', 'utf-8');
-        return new Crawler($body);
+
+        return new Crawler($response);
     }
 
     /**
      * Get image URL
      *
-     * @param string $iamge
+     * @param string $image
      *
      * @return string
      */

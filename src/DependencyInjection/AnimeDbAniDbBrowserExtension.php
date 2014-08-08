@@ -1,4 +1,12 @@
 <?php
+/**
+ * AnimeDb package
+ *
+ * @package   AnimeDb
+ * @author    Peter Gribanov <info@peter-gribanov.ru>
+ * @copyright Copyright (c) 2011, Peter Gribanov
+ * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
+ */
 
 namespace AnimeDb\Bundle\AniDbBrowserBundle\DependencyInjection;
 
@@ -8,14 +16,16 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
 /**
- * This is the class that loads and manages your bundle configuration
+ * DependencyInjection
  *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
+ * @package AnimeDb\Bundle\AniDbBrowserBundle\DependencyInjection
+ * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class AnimeDbAniDbBrowserExtension extends Extension
 {
     /**
-     * {@inheritDoc}
+     * (non-PHPdoc)
+     * @see \Symfony\Component\DependencyInjection\Extension\ExtensionInterface::load()
      */
     public function load(array $configs, ContainerBuilder $container)
     {
