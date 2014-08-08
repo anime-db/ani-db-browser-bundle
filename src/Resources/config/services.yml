@@ -8,6 +8,7 @@ services:
             - %anime_db.ani_db.api.client%
             - %anime_db.ani_db.api.clientver%
             - %anime_db.ani_db.api.protover%
+            - %anime_db.ani_db.app_code%
             - %anime_db.ani_db.image_prefix%
         calls:
             - [ setResponseCache, [ @anime_db.ani_db.browser.cache ] ]
