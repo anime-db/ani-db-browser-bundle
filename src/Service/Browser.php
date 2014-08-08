@@ -89,7 +89,6 @@ class Browser
         $image_prefix
     ) {
         $this->client = $client;
-        $this->client->setDefaultHeaders(['User-Agent' => $app_code]);
         $api_prefix .= strpos($api_prefix, '?') !== false ? '&' : '?';
         $api_prefix .= http_build_query([
             'client'    => $api_client,
@@ -98,6 +97,7 @@ class Browser
         ]);
         $this->host = $host;
         $this->api_prefix = $api_prefix;
+        $this->app_code = $app_code;
         $this->image_prefix = $image_prefix;
     }
 
@@ -146,7 +146,7 @@ class Browser
 
         // try get response from cache
         if ($force || !($this->cache instanceof CacheResponse) || !($response = $this->cache->get($path))) {
-            $response = $this->client->get($path)->send();
+            $response = $this->client->get($path)->setHeader('User-Agent', $this->app_code)->send();
             if ($response->isError()) {
                 throw new \RuntimeException("Failed execute request '{$request}' to the server '".$this->getApiHost()."'");
             }
