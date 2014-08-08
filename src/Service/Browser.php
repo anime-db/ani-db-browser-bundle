@@ -75,7 +75,7 @@ class Browser
      * @param string $api_client
      * @param string $api_clientver
      * @param string $api_protover
-     * @param string $api_code
+     * @param string $app_code
      * @param string $image_prefix
      */
     public function __construct(
