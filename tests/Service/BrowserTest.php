@@ -8,7 +8,7 @@
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
 
-namespace AnimeDb\Bundle\AniDbBrowserBundle\Service\Tests;
+namespace AnimeDb\Bundle\AniDbBrowserBundle\Tests\Service;
 
 use AnimeDb\Bundle\AniDbBrowserBundle\Service\Browser;
 use Symfony\Component\DomCrawler\Crawler;
@@ -16,7 +16,7 @@ use Symfony\Component\DomCrawler\Crawler;
 /**
  * Test browser
  *
- * @package AnimeDb\Bundle\AniDbBrowserBundle\Service\Tests
+ * @package AnimeDb\Bundle\AniDbBrowserBundle\Tests\Service
  * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class BrowserTest extends \PHPUnit_Framework_TestCase
