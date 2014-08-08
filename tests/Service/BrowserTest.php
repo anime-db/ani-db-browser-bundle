@@ -57,6 +57,13 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     protected $api_protover = 'api_protover';
 
     /**
+     * App code
+     *
+     * @var string
+     */
+    protected $app_code = 'app_code';
+
+    /**
      * Image prefix
      *
      * @var string
@@ -124,10 +131,6 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->getMockBuilder('\Guzzle\Http\Message\Response')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->client
-            ->expects($this->once())
-            ->method('setDefaultHeaders')
-            ->with(['User-Agent' => 'app-code']);
 
         $this->browser = new Browser(
             $this->client,
@@ -136,7 +139,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             $this->api_client,
             $this->api_clientver,
             $this->api_protover,
-            'app-code',
+            $this->app_code,
             $this->image_prefix
         );
     }
@@ -206,6 +209,11 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('get')
             ->with($this->getUrl($request, $params))
+            ->will($this->returnValue($this->request));
+        $this->request
+            ->expects($this->once())
+            ->method('setHeader')
+            ->with('User-Agent', $this->app_code)
             ->will($this->returnValue($this->request));
         $this->request
             ->expects($this->once())
