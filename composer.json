@@ -1,26 +1,26 @@
 {
-    "name": "anime-db/ani-db-browser-bundle",
-    "license": "GPL-3.0",
-    "type": "library",
-    "description": "Plugin AniDB for the catalog Anime DB",
-    "homepage": "http://github.com/anime-db/ani-db-browser-bundle",
-    "version": "1.0.0",
-    "autoload": {
-        "psr-4": {
-            "AnimeDb\\Bundle\\AniDbBrowserBundle\\": "src/",
-            "AnimeDb\\Bundle\\AniDbBrowserBundle\\Tests\\": "tests/"
-        }
-    },
-    "require": {
-        "php": ">=5.4.0",
-        "ext-zlib": "*",
-        "guzzle/guzzle": ">=3.7.0",
-        "symfony/dom-crawler": ">=2.3.17"
-    },
-    "require-dev": {
-        "symfony/dependency-injection": ">=2.3.17",
-        "symfony/config": ">=2.3.17",
-        "symfony/http-kernel": ">=2.3.17"
-    },
-    "minimum-stability": "dev"
+	"name" : "anime-db/ani-db-browser-bundle",
+	"license" : "GPL-3.0",
+	"type" : "library",
+	"description" : "Plugin AniDB for the catalog Anime DB",
+	"homepage" : "http://github.com/anime-db/ani-db-browser-bundle",
+	"version" : "1.0.0",
+	"autoload" : {
+		"psr-4" : {
+			"AnimeDb\\Bundle\\AniDbBrowserBundle\\" : "src/",
+			"AnimeDb\\Bundle\\AniDbBrowserBundle\\Tests\\" : "tests/"
+		}
+	},
+	"require" : {
+		"php" : ">=5.4.0",
+		"ext-zlib" : "*",
+		"guzzle/guzzle" : ">=3.7.0",
+		"symfony/dom-crawler" : ">=2.3.17"
+	},
+	"require-dev" : {
+		"symfony/dependency-injection" : ">=2.3.17",
+		"symfony/config" : ">=2.3.17",
+		"symfony/http-kernel" : ">=2.3.17"
+	},
+	"minimum-stability" : "dev"
 }
