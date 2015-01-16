@@ -6,14 +6,18 @@
 	"homepage" : "http://github.com/anime-db/ani-db-browser-bundle",
 	"autoload" : {
 		"psr-4" : {
-			"AnimeDb\\Bundle\\AniDbBrowserBundle\\" : "src/",
+			"AnimeDb\\Bundle\\AniDbBrowserBundle\\" : "src/"
+		}
+	},
+	"autoload-dev" : {
+		"psr-4" : {
 			"AnimeDb\\Bundle\\AniDbBrowserBundle\\Tests\\" : "tests/"
 		}
 	},
 	"require" : {
 		"php" : ">=5.4.0",
 		"ext-zlib" : "*",
-		"guzzle/guzzle" : ">=3.7.0",
+		"guzzle/guzzle" : "3.9.*",
 		"symfony/dom-crawler" : ">=2.3.17"
 	},
 	"require-dev" : {
