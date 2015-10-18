@@ -15,7 +15,7 @@
         }
     },
     "require" : {
-        "php" : ">=5.3.3",
+        "php" : ">=5.4",
         "ext-zlib" : "*",
         "guzzle/guzzle" : "3.9.*",
         "symfony/dom-crawler" : ">=2.3.17"
