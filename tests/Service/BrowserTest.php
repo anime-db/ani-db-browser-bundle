@@ -173,6 +173,38 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test set timeout
+     */
+    public function testSetTimeout()
+    {
+        $timeout = 123;
+        $this->client
+            ->expects($this->once())
+            ->method('setDefaultOption')
+            ->with('timeout', $timeout);
+        $this->assertEquals(
+            $this->browser,
+            $this->browser->setTimeout($timeout)
+        );
+    }
+
+    /**
+     * Test set proxy
+     */
+    public function testSetProxy()
+    {
+        $proxy = '127.0.0.1';
+        $this->client
+            ->expects($this->once())
+            ->method('setDefaultOption')
+            ->with('proxy', $proxy);
+        $this->assertEquals(
+            $this->browser,
+            $this->browser->setProxy($proxy)
+        );
+    }
+
+    /**
      * Test get failed transport
      *
      * @expectedException RuntimeException

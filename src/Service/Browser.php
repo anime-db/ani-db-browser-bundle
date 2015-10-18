@@ -122,6 +122,32 @@ class Browser
     }
 
     /**
+     * Set timeout
+     *
+     * @param integer $timeout
+     *
+     * @return \AnimeDb\Bundle\AniDbBrowserBundle\Service\Browser
+     */
+    public function setTimeout($timeout)
+    {
+        $this->client->setDefaultOption('timeout', $timeout);
+        return $this;
+    }
+
+    /**
+     * Set proxy
+     *
+     * @param integer $proxy
+     *
+     * @return \AnimeDb\Bundle\AniDbBrowserBundle\Service\Browser
+     */
+    public function setProxy($proxy)
+    {
+        $this->client->setDefaultOption('proxy', $proxy);
+        return $this;
+    }
+
+    /**
      * Set response cache
      *
      * @param \AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse $cache
