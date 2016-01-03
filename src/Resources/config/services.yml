@@ -2,23 +2,23 @@ services:
     anime_db.ani_db.browser:
         class: AnimeDb\Bundle\AniDbBrowserBundle\Service\Browser
         arguments:
-            - @anime_db.ani_db.browser.client
-            - %anime_db.ani_db.host%
-            - %anime_db.ani_db.api.prefix%
-            - %anime_db.ani_db.api.client%
-            - %anime_db.ani_db.api.clientver%
-            - %anime_db.ani_db.api.protover%
-            - %anime_db.ani_db.app_code%
-            - %anime_db.ani_db.image_prefix%
+            - '@anime_db.ani_db.browser.client'
+            - '%anime_db.ani_db.host%'
+            - '%anime_db.ani_db.api.prefix%'
+            - '%anime_db.ani_db.api.client%'
+            - '%anime_db.ani_db.api.clientver%'
+            - '%anime_db.ani_db.api.protover%'
+            - '%anime_db.ani_db.app_code%'
+            - '%anime_db.ani_db.image_prefix%'
         calls:
-            - [ setResponseCache, [ @anime_db.ani_db.browser.cache ] ]
+            - [ setResponseCache, [ '@anime_db.ani_db.browser.cache' ] ]
 
     anime_db.ani_db.browser.client:
         class: Guzzle\Http\Client
-        arguments: [ %anime_db.ani_db.api.host% ]
+        arguments: [ '%anime_db.ani_db.api.host%' ]
         public: false
 
     anime_db.ani_db.browser.cache:
         class: AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse
-        arguments: [ %anime_db.ani_db.cache_response_dir% ]
+        arguments: [ '%anime_db.ani_db.cache_response_dir%' ]
         public: false
