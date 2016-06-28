@@ -52,6 +52,8 @@ class GuzzleClient implements ClientInterface
         $app_code
     ) {
         $this->client = $client;
+        $this->app_code = $app_code;
+        $this->response_repair = $response_repair;
         $this->api_prefix = $api_prefix.
             (strpos($api_prefix, '?') !== false ? '&' : '?').
             http_build_query([
@@ -59,8 +61,6 @@ class GuzzleClient implements ClientInterface
                 'clientver' => $api_clientver,
                 'protover' => $api_protover,
             ]);
-        $this->app_code = $app_code;
-        $this->response_repair = $response_repair;
     }
 
     /**

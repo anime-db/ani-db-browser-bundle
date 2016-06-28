@@ -20,7 +20,7 @@ class FileStorage implements StorageInterface
     /**
      * @var string
      */
-    protected $cache_dir;
+    protected $cache_dir = '';
 
     /**
      * @param Filesystem $fs
