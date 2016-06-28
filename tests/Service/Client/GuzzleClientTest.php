@@ -190,10 +190,7 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         $this->client
             ->expects($this->once())
             ->method('get')
-            ->with($final_api_prefix, null, [
-                'query' => $this->buildApiSuffix($request, $query, $params),
-                'headers' => $headers,
-            ])
+            ->with($final_api_prefix, $headers, ['query' => $this->buildApiSuffix($request, $query, $params)])
             ->will($this->returnValue($request_obj));
         $this->client
             ->expects($this->once())
@@ -245,10 +242,7 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         $this->client
             ->expects($this->once())
             ->method('get')
-            ->with($final_api_prefix, null, [
-                'query' => $this->buildApiSuffix($request, $query, $params),
-                'headers' => $headers,
-            ])
+            ->with($final_api_prefix, $headers, ['query' => $this->buildApiSuffix($request, $query, $params)])
             ->will($this->returnValue($request_obj));
 
         $this->repair

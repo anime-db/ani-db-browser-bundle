@@ -106,11 +106,8 @@ class GuzzleClient implements ClientInterface
     {
         $request = $this->client->get(
             $this->api_prefix,
-            null,
-            [
-                'query' => $this->request_params + ['request' => $request] + $params,
-                'headers' => $this->app_code ? ['User-Agent' => $this->app_code] : [],
-            ]
+            $this->app_code ? ['User-Agent' => $this->app_code] : [],
+            ['query' => $this->request_params + ['request' => $request] + $params]
         );
 
         $response = $request->send();
