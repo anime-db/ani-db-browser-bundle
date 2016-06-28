@@ -89,17 +89,22 @@ class CacheResponse
     {
         switch ($request) {
             case 'anime':
-                return strtotime('+1 week');
+                $expires = strtotime('+1 week');
+                break;
             case 'categorylist':
-                return strtotime('+6 month');
+                $expires = strtotime('+6 month');
+                break;
             case 'randomrecommendation':
             case 'randomsimilar':
             case 'mylistsummary':
-                return 0; // no cache
+                $expires = 0; // no cache
+                break;
             case 'hotanime':
             case 'main':
             default:
-                return strtotime('+1 day');
+                $expires = strtotime('+1 day');
         }
+
+        return $expires;
     }
 }
