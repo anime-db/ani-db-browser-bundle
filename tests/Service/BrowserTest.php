@@ -161,13 +161,13 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     public function testGetFailedTransport()
     {
         $this->buildDialogue('foo', ['bar' => 'baz']);
-        $this->browser->get('foo', ['bar' => 'baz']);
+        $this->browser->getCrawler('foo', ['bar' => 'baz']);
     }
 
     public function testGet()
     {
         $this->buildDialogue('foo', ['bar' => 'baz'], $this->xml);
-        $result = $this->browser->get('foo', ['bar' => 'baz']);
+        $result = $this->browser->getCrawler('foo', ['bar' => 'baz']);
 
         $this->assertInstanceOf('\Symfony\Component\DomCrawler\Crawler', $result);
 
@@ -241,7 +241,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
 
         $this->browser->setResponseCache($this->cache);
         $this->buildDialogue('foo', ['bar' => 'baz'], $this->xml);
-        $this->browser->get('foo', ['bar' => 'baz'], true);
+        $this->browser->getCrawler('foo', ['bar' => 'baz'], true);
     }
 
     public function testGetFromCache()
@@ -256,6 +256,6 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->method('set');
 
         $this->browser->setResponseCache($this->cache);
-        $this->browser->get('foo', ['bar' => 'baz']);
+        $this->browser->getCrawler('foo', ['bar' => 'baz']);
     }
 }
