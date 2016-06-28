@@ -3,3 +3,8 @@ services:
         class: AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Cache\ExpireResolver
         arguments: [ '%anime_db.ani_db.cache.requests%' ]
         public: false
+
+    anime_db.ani_db.browser.client.cache.storage.file:
+        class: AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Cache\Storage\FileStorage
+        arguments: [ '@filesystem', '%anime_db.ani_db.cache_response_dir%' ]
+        public: false
