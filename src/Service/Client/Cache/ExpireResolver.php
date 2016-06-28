@@ -41,10 +41,12 @@ class ExpireResolver
      */
     public function getExpire($request, \DateTime $date)
     {
-        if (!empty($this->requests[$request])) {
-            return $date->modify($this->requests[$request]);
-        } elseif (!isset($this->requests[$request])) {
+        if (!array_key_exists($request, $this->requests)) {
             return $date->modify(self::DEFAULT_MODIFY);
+        }
+
+        if ($this->requests[$request]) {
+            return $date->modify($this->requests[$request]);
         }
 
         return null;

@@ -60,7 +60,7 @@ class ExpireResolverTest extends \PHPUnit_Framework_TestCase
         $date = new \DateTime('28-06-2016 16:30:00');
         $expected = clone $date;
 
-        if (!isset($this->requests[$request])) {
+        if (!array_key_exists($request, $this->requests)) {
             $expected->modify(ExpireResolver::DEFAULT_MODIFY);
         } elseif ($this->requests[$request]) {
             $expected->modify($this->requests[$request]);
