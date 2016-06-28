@@ -1,5 +1,5 @@
 services:
-    anime_db.ani_db.browser.client.guzzle:
+    anime_db.ani_db.browser.client.cache:
         class: AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\CacheClient
         arguments:
             - '@anime_db.ani_db.browser.client.guzzle'
