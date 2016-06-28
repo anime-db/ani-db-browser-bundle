@@ -8,9 +8,8 @@
  */
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Service;
 
-use AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair;
+use AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\ClientInterface;
 use Symfony\Component\DomCrawler\Crawler;
-use Guzzle\Http\Client;
 
 /**
  * Browser.
@@ -21,74 +20,37 @@ use Guzzle\Http\Client;
 class Browser
 {
     /**
-     * @var string
+     * @var ClientInterface
      */
-    private $host;
+    protected $client;
 
     /**
      * @var string
      */
-    private $api_prefix;
+    protected $host;
 
     /**
      * @var string
      */
-    private $app_code;
+    protected $api_host;
 
     /**
      * @var string
      */
-    private $image_prefix;
+    protected $image_prefix;
 
     /**
-     * @var Client
-     */
-    private $client;
-
-    /**
-     * @var CacheResponse
-     */
-    private $cache;
-
-    /**
-     * @var ResponseRepair
-     */
-    private $response_repair;
-
-    /**
-     * @param Client $client
-     * @param ResponseRepair $response_repair
+     * @param ClientInterface $client
      * @param string $host
-     * @param string $api_prefix
-     * @param string $api_client
-     * @param string $api_clientver
-     * @param string $api_protover
-     * @param string $app_code
+     * @param string $api_host
      * @param string $image_prefix
      */
-    public function __construct(
-        Client $client,
-        ResponseRepair $response_repair,
-        $host,
-        $api_prefix,
-        $api_client,
-        $api_clientver,
-        $api_protover,
-        $app_code,
-        $image_prefix
-    ) {
+    public function __construct(ClientInterface $client, $host, $api_host, $image_prefix)
+    {
         $this->client = $client;
-        $api_prefix .= strpos($api_prefix, '?') !== false ? '&' : '?';
-        $api_prefix .= http_build_query([
-            'client' => $api_client,
-            'clientver' => $api_clientver,
-            'protover' => $api_protover,
-        ]);
         $this->host = $host;
-        $this->api_prefix = $api_prefix;
-        $this->app_code = $app_code;
+        $this->api_host = $api_host;
         $this->image_prefix = $image_prefix;
-        $this->response_repair = $response_repair;
     }
 
     /**
@@ -104,7 +66,7 @@ class Browser
      */
     public function getApiHost()
     {
-        return $this->client->getBaseUrl();
+        return $this->api_host;
     }
 
     /**
@@ -114,7 +76,7 @@ class Browser
      */
     public function setTimeout($timeout)
     {
-        $this->client->setDefaultOption('timeout', $timeout);
+        $this->client->setTimeout($timeout);
 
         return $this;
     }
@@ -126,72 +88,31 @@ class Browser
      */
     public function setProxy($proxy)
     {
-        $this->client->setDefaultOption('proxy', $proxy);
+        $this->client->setProxy($proxy);
 
         return $this;
     }
 
     /**
-     * @param CacheResponse $cache
-     */
-    public function setResponseCache(CacheResponse $cache)
-    {
-        $this->cache = $cache;
-    }
-
-    /**
-     * @deprecated get() is deprecated since AniDbBrowser 2.0. Use getCrawler() instead
-     *
      * @param string $request
      * @param array $params
-     * @param bool $force
-     *
-     * @return Crawler
-     */
-    public function get($request, array $params = [], $force = false)
-    {
-        return $this->getCrawler($request, $params, $force);
-    }
-
-    /**
-     * @param string $request
-     * @param array $params
-     * @param bool $force
      *
      * @return string
      */
-    public function getContent($request, array $params = [], $force = false)
+    public function getContent($request, array $params = [])
     {
-        $path = $this->api_prefix.'&request='.$request.($params ? '&'.http_build_query($params) : '');
-
-        // try get response from cache
-        if ($force || !($this->cache instanceof CacheResponse) || !($response = $this->cache->get($path))) {
-            $response = $this->client->get($path)->setHeader('User-Agent', $this->app_code)->send();
-            if ($response->isError()) {
-                throw new \RuntimeException("Failed execute request '{$request}' to the server '".$this->getApiHost()."'");
-            }
-            $response = gzdecode($response->getBody(true));
-            $response = $this->response_repair->repair($response); // repair
-
-            // cache response
-            if ($this->cache instanceof CacheResponse) {
-                $this->cache->set($request, $path, $response);
-            }
-        }
-
-        return $response;
+        return $this->client->get($request, $params);
     }
 
     /**
      * @param string $request
      * @param array $params
-     * @param bool $force
      *
      * @return Crawler
      */
-    public function getCrawler($request, array $params = [], $force = false)
+    public function getCrawler($request, array $params = [])
     {
-        return new Crawler($this->getContent($request, $params, $force));
+        return new Crawler($this->getContent($request, $params));
     }
 
     /**

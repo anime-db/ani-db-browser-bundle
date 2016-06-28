@@ -6,17 +6,10 @@ services:
     anime_db.ani_db.browser:
         class: AnimeDb\Bundle\AniDbBrowserBundle\Service\Browser
         arguments:
-            - '@anime_db.ani_db.browser.client.guzzle.guzzle'
-            - '@anime_db.ani_db.browser.response_repair'
+            - '@anime_db.ani_db.browser.client.cache'
             - '%anime_db.ani_db.host%'
-            - '%anime_db.ani_db.api.prefix%'
-            - '%anime_db.ani_db.api.client%'
-            - '%anime_db.ani_db.api.clientver%'
-            - '%anime_db.ani_db.api.protover%'
-            - '%anime_db.ani_db.app_code%'
+            - '%anime_db.ani_db.api.host%'
             - '%anime_db.ani_db.image_prefix%'
-        calls:
-            - [ setResponseCache, [ '@anime_db.ani_db.browser.cache' ] ]
 
     # deprecated
     anime_db.ani_db.browser.cache:
