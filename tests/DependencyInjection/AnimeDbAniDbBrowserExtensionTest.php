@@ -1,6 +1,6 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class AnimeDbAniDbBrowserExtensionTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test load
+     * Test load.
      */
     public function testLoad()
     {
