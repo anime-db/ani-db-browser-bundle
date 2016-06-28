@@ -1,8 +1,12 @@
+imports:
+    - { resource: 'services/guzzle_client.yml' }
+    - { resource: 'services/cache_client.yml' }
+
 services:
     anime_db.ani_db.browser:
         class: AnimeDb\Bundle\AniDbBrowserBundle\Service\Browser
         arguments:
-            - '@anime_db.ani_db.browser.client.guzzle'
+            - '@anime_db.ani_db.browser.client.guzzle.guzzle'
             - '@anime_db.ani_db.browser.response_repair'
             - '%anime_db.ani_db.host%'
             - '%anime_db.ani_db.api.prefix%'
@@ -14,24 +18,11 @@ services:
         calls:
             - [ setResponseCache, [ '@anime_db.ani_db.browser.cache' ] ]
 
+    # deprecated
     anime_db.ani_db.browser.cache:
         class: AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse
         arguments:
             - '@filesystem'
             - '@anime_db.ani_db.browser.client.cache.expire_resolver'
             - '%anime_db.ani_db.cache_response_dir%'
-        public: false
-
-    anime_db.ani_db.browser.client.guzzle:
-        class: Guzzle\Http\Client
-        arguments: [ '%anime_db.ani_db.api.host%' ]
-        public: false
-
-    anime_db.ani_db.browser.client.cache.expire_resolver:
-        class: AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Cache\ExpireResolver
-        arguments: [ '%anime_db.ani_db.cache.requests%' ]
-        public: false
-
-    anime_db.ani_db.browser.response_repair:
-        class: AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair
         public: false

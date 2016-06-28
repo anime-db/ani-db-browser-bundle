@@ -1,0 +1,5 @@
+services:
+    anime_db.ani_db.browser.client.cache.expire_resolver:
+        class: AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Cache\ExpireResolver
+        arguments: [ '%anime_db.ani_db.cache.requests%' ]
+        public: false
