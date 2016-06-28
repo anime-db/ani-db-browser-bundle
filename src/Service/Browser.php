@@ -2,15 +2,12 @@
 /**
  * AnimeDb package
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Service;
 
-use AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse;
 use Symfony\Component\DomCrawler\Crawler;
 use Guzzle\Http\Client;
 
@@ -19,57 +16,41 @@ use Guzzle\Http\Client;
  *
  * @link http://anidb.net/
  * @link http://wiki.anidb.net/w/HTTP_API_Definition
- * @package AnimeDb\Bundle\AniDbBrowserBundle\Service
- * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class Browser
 {
     /**
-     * Host
-     *
      * @var string
      */
     private $host;
 
     /**
-     * API path prefix
-     *
      * @var string
      */
     private $api_prefix;
 
     /**
-     * App code
-     *
      * @var string
      */
     private $app_code;
 
     /**
-     * Image URL prefix
-     *
      * @var string
      */
     private $image_prefix;
 
     /**
-     * HTTP client
-     *
-     * @var \Guzzle\Http\Client
+     * @var Client
      */
     private $client;
 
     /**
-     * Cache response data
-     *
-     * @var \AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse
+     * @var CacheResponse
      */
     private $cache;
 
     /**
-     * Construct
-     *
-     * @param \Guzzle\Http\Client $client
+     * @param Client $client
      * @param string $host
      * @param string $api_prefix
      * @param string $api_client
@@ -102,8 +83,6 @@ class Browser
     }
 
     /**
-     * Get host
-     *
      * @return string
      */
     public function getHost()
@@ -112,8 +91,6 @@ class Browser
     }
 
     /**
-     * Get API host
-     *
      * @return string
      */
     public function getApiHost()
@@ -122,35 +99,31 @@ class Browser
     }
 
     /**
-     * Set timeout
+     * @param int $timeout
      *
-     * @param integer $timeout
-     *
-     * @return \AnimeDb\Bundle\AniDbBrowserBundle\Service\Browser
+     * @return Browser
      */
     public function setTimeout($timeout)
     {
         $this->client->setDefaultOption('timeout', $timeout);
+
         return $this;
     }
 
     /**
-     * Set proxy
+     * @param string $proxy
      *
-     * @param integer $proxy
-     *
-     * @return \AnimeDb\Bundle\AniDbBrowserBundle\Service\Browser
+     * @return Browser
      */
     public function setProxy($proxy)
     {
         $this->client->setDefaultOption('proxy', $proxy);
+
         return $this;
     }
 
     /**
-     * Set response cache
-     *
-     * @param \AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse $cache
+     * @param CacheResponse $cache
      */
     public function setResponseCache(CacheResponse $cache)
     {
@@ -158,13 +131,11 @@ class Browser
     }
 
     /**
-     * Get data
-     *
      * @param string $request
      * @param array $params
-     * @param boolean $force
+     * @param bool $force
      *
-     * @return \Symfony\Component\DomCrawler\Crawler
+     * @return Crawler
      */
     public function get($request, array $params = [], $force = false)
     {
@@ -172,7 +143,9 @@ class Browser
 
         // try get response from cache
         if ($force || !($this->cache instanceof CacheResponse) || !($response = $this->cache->get($path))) {
-            $response = $this->client->get($path)->setHeader('User-Agent', $this->app_code)->send();
+            $request = $this->client->get($path);
+            $request->setHeader('User-Agent', $this->app_code);
+            $response = $request->send();
             if ($response->isError()) {
                 throw new \RuntimeException("Failed execute request '{$request}' to the server '".$this->getApiHost()."'");
             }
@@ -188,8 +161,6 @@ class Browser
     }
 
     /**
-     * Get image URL
-     *
      * @param string $image
      *
      * @return string

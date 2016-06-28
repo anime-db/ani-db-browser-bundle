@@ -2,120 +2,86 @@
 /**
  * AnimeDb package
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Tests\Service;
 
 use AnimeDb\Bundle\AniDbBrowserBundle\Service\Browser;
+use AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse;
+use Guzzle\Http\Client;
+use Guzzle\Http\Message\RequestInterface;
+use Guzzle\Http\Message\Response;
 use Symfony\Component\DomCrawler\Crawler;
 
-/**
- * Test browser
- *
- * @package AnimeDb\Bundle\AniDbBrowserBundle\Tests\Service
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class BrowserTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Host
-     *
      * @var string
      */
     protected $host = 'host';
 
     /**
-     * API path prefix
-     *
      * @var string
      */
     protected $api_prefix = 'api_prefix';
 
     /**
-     * API client
-     *
      * @var string
      */
     protected $api_client = 'api_client';
 
     /**
-     * API clientver
-     *
      * @var string
      */
     protected $api_clientver = 'api_clientver';
 
     /**
-     * API protover
-     *
      * @var string
      */
     protected $api_protover = 'api_protover';
 
     /**
-     * App code
-     *
      * @var string
      */
     protected $app_code = 'app_code';
 
     /**
-     * Image prefix
-     *
      * @var string
      */
     protected $image_prefix = 'image_prefix';
 
     /**
-     * XML
-     *
      * @var string
      */
     protected $xml = '<?xml version="1.0"?><root><text>Hello, world!</text></root>';
 
     /**
-     * Browser
-     *
-     * @var \AnimeDb\Bundle\AniDbBrowserBundle\Service\Browser
+     * @var Browser
      */
     protected $browser;
 
     /**
-     * Client
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|Client
      */
     protected $client;
 
     /**
-     * Cache
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|CacheResponse
      */
     protected $cache;
 
     /**
-     * Request
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|RequestInterface
      */
     protected $request;
 
     /**
-     * Response
-     *
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|Response
      */
     protected $response;
 
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::setUp()
-     */
     protected function setUp()
     {
         $this->client = $this
@@ -144,25 +110,16 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * Test get image url
-     */
     public function testGetImageUrl()
     {
         $this->assertEquals($this->image_prefix.'foo', $this->browser->getImageUrl('foo'));
     }
 
-    /**
-     * Test get host
-     */
     public function testGetHost()
     {
         $this->assertEquals($this->host, $this->browser->getHost());
     }
 
-    /**
-     * Test get api host
-     */
     public function testGetApiHost()
     {
         $this->client
@@ -172,9 +129,6 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $this->browser->getApiHost());
     }
 
-    /**
-     * Test set timeout
-     */
     public function testSetTimeout()
     {
         $timeout = 123;
@@ -188,9 +142,6 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * Test set proxy
-     */
     public function testSetProxy()
     {
         $proxy = '127.0.0.1';
@@ -205,9 +156,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test get failed transport
-     *
-     * @expectedException RuntimeException
+     * @expectedException \RuntimeException
      */
     public function testGetFailedTransport()
     {
@@ -215,22 +164,19 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $this->browser->get('foo', ['bar' => 'baz']);
     }
 
-    /**
-     * Test get
-     */
     public function testGet()
     {
         $this->buildDialogue('foo', ['bar' => 'baz'], $this->xml);
         $result = $this->browser->get('foo', ['bar' => 'baz']);
+
         $this->assertInstanceOf('\Symfony\Component\DomCrawler\Crawler', $result);
+
         // objects are not identical, but their content should match
         $expected = new Crawler($this->xml);
         $this->assertEquals($expected->html(), $result->html());
     }
 
     /**
-     * Build client dialogue
-     *
      * @param string $request
      * @param array $params
      * @param string $data
@@ -255,6 +201,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('isError')
             ->will($this->returnValue(!$data));
+
         if ($data) {
             $this->response
                 ->expects($this->once())
@@ -265,8 +212,6 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get URL
-     *
      * @param string $request
      * @param array $params
      *
@@ -284,9 +229,6 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ], $params));
     }
 
-    /**
-     * Test get force
-     */
     public function testGetForce()
     {
         $this->cache
@@ -302,9 +244,6 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $this->browser->get('foo', ['bar' => 'baz'], true);
     }
 
-    /**
-     * Test get from cache
-     */
     public function testGetFromCache()
     {
         $this->cache

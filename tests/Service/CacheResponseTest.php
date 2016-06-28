@@ -2,52 +2,33 @@
 /**
  * AnimeDb package
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Tests\Service;
 
 use AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse;
 
-/**
- * Test cache response
- *
- * @package AnimeDb\Bundle\AniDbBrowserBundle\Tests\Service
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class CacheResponseTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Cache dir
-     *
      * @var string
      */
     protected $dir;
 
     /**
-     * Filename
-     *
      * @var string
      */
     protected $filename;
 
     /**
-     * Cache response
-     *
-     * @var \AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse
+     * @var CacheResponse
      */
     protected $cache;
 
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::setUp()
-     */
     public function setUp()
     {
-        parent::setUp();
         $this->dir = sys_get_temp_dir().'/unit-test/';
         $this->filename = $this->dir.md5('foo').'.xml';
         $this->cache = new CacheResponse($this->dir);
@@ -56,13 +37,8 @@ class CacheResponseTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * (non-PHPdoc)
-     * @see PHPUnit_Framework_TestCase::tearDown()
-     */
     public function tearDown()
     {
-        parent::tearDown();
         if (is_dir($this->dir)) {
             foreach (scandir($this->dir) as $value) {
                 if ($value[0] != '.') {
@@ -73,26 +49,17 @@ class CacheResponseTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * Test get no dir
-     */
     public function testGetNoDir()
     {
         $this->tearDown(); // remove dir
         $this->assertNull($this->cache->get('foo'));
     }
 
-    /**
-     * Test get no file
-     */
     public function testGetNoFile()
     {
         $this->assertNull($this->cache->get('foo'));
     }
 
-    /**
-     * Test get cache is expired
-     */
     public function testGetExpired()
     { 
         file_put_contents($this->filename, '');
@@ -100,24 +67,18 @@ class CacheResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($this->cache->get('foo'));
     }
 
-    /**
-     * Test get
-     */
     public function testGet()
     { 
         file_put_contents($this->filename, 'bar');
         $this->assertEquals('bar', $this->cache->get('foo'));
     }
 
-    /**
-     * Test set no cache
-     */
     public function testSetNoCache()
     {
         $requests = [
             'randomrecommendation',
             'randomsimilar',
-            'mylistsummary'
+            'mylistsummary',
         ];
         foreach ($requests as $request) {
             $this->cache->set($request, 'foo', 'bar');
@@ -125,9 +86,6 @@ class CacheResponseTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * Test set
-     */
     public function testSet()
     {
         $this->tearDown(); // remove dir

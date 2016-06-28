@@ -2,33 +2,25 @@
 /**
  * AnimeDb package
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Service;
 
 /**
  * Cache response
  *
  * @link http://wiki.anidb.net/w/HTTP_API_Definition
- * @package AnimeDb\Bundle\AniDbBrowserBundle\Service
- * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
 class CacheResponse
 {
     /**
-     * Cache dir
-     *
      * @var string
      */
     protected $cache_dir;
 
     /**
-     * Construct
-     *
      * @param string $cache_dir
      */
     public function __construct($cache_dir)
@@ -37,8 +29,6 @@ class CacheResponse
     }
 
     /**
-     * Get response data
-     *
      * @param string $url
      *
      * @return string|null
@@ -51,12 +41,11 @@ class CacheResponse
                 return file_get_contents($filename);
             }
         }
+
         return null;
     }
 
     /**
-     * Set response data
-     *
      * @param string $request
      * @param string $url
      * @param string $response
@@ -74,8 +63,6 @@ class CacheResponse
     }
 
     /**
-     * Get filename
-     *
      * @param string $url
      *
      * @return string
@@ -92,7 +79,7 @@ class CacheResponse
      *
      * @param string $request
      *
-     * @return integer
+     * @return int
      */
     protected function getRequestExpires($request)
     {
