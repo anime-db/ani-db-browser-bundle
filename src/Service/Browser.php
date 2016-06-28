@@ -131,6 +131,8 @@ class Browser
     }
 
     /**
+     * @deprecated get() is deprecated since AniDbBrowser 2.0. Use getCrawler() instead
+     *
      * @param string $request
      * @param array $params
      * @param bool $force
@@ -138,6 +140,18 @@ class Browser
      * @return Crawler
      */
     public function get($request, array $params = [], $force = false)
+    {
+        return $this->getCrawler($request, $params, $force);
+    }
+
+    /**
+     * @param string $request
+     * @param array $params
+     * @param bool $force
+     *
+     * @return Crawler
+     */
+    public function getContent($request, array $params = [], $force = false)
     {
         $path = $this->api_prefix.'&request='.$request.($params ? '&'.http_build_query($params) : '');
 
@@ -155,7 +169,19 @@ class Browser
             }
         }
 
-        return new Crawler($response);
+        return $response;
+    }
+
+    /**
+     * @param string $request
+     * @param array $params
+     * @param bool $force
+     *
+     * @return Crawler
+     */
+    public function getCrawler($request, array $params = [], $force = false)
+    {
+        return new Crawler($this->getContent($request, $params, $force));
     }
 
     /**
