@@ -62,8 +62,8 @@ class GuzzleClient implements ClientInterface
 
         $query = [];
         if ($api_prefix) {
-            parse_str(parse_url($api_prefix, PHP_URL_QUERY), $query);
-            $this->api_prefix = parse_url($api_prefix, PHP_URL_PATH);
+            parse_str((string)parse_url($api_prefix, PHP_URL_QUERY), $query);
+            $this->api_prefix = (string)parse_url($api_prefix, PHP_URL_PATH);
         }
         $this->request_params = [
             'client' => $api_client,
