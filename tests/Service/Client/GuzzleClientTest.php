@@ -6,7 +6,6 @@
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
-
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Tests\Service\Client;
 
 use AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\GuzzleClient;
@@ -39,7 +38,6 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
      * @var string
      */
     protected $api_protover = 'api_protover';
-
 
     protected function setUp()
     {
@@ -111,7 +109,7 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
             ] +
             $api_params +
             [
-                'request' => $request
+                'request' => $request,
             ] +
             $params;
     }
@@ -145,7 +143,7 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
                         $app_code,
                         $request_param,
                         $api_prefix[2] + $request_param,
-                        $app_code ? ['User-Agent' => $app_code] : []
+                        $app_code ? ['User-Agent' => $app_code] : [],
                     ];
                 }
             }
