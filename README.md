@@ -5,6 +5,7 @@
 [![Total Downloads](https://poser.pugx.org/anime-db/ani-db-browser-bundle/downloads)](https://packagist.org/packages/anime-db/ani-db-browser-bundle)
 [![Build Status](https://travis-ci.org/anime-db/ani-db-browser-bundle.svg?branch=master)](https://travis-ci.org/anime-db/ani-db-browser-bundle)
 [![Code Coverage](https://scrutinizer-ci.com/g/anime-db/ani-db-browser-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/anime-db/ani-db-browser-bundle/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/anime-db/ani-db-browser-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/anime-db/ani-db-browser-bundle/?branch=master)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/0e383920-eaf5-474a-b998-a00462485827/mini.png)](https://insight.sensiolabs.com/projects/0e383920-eaf5-474a-b998-a00462485827)
 [![StyleCI](https://styleci.io/repos/19101337/shield)](https://styleci.io/repos/19101337)
 [![Dependency Status](https://www.versioneye.com/user/projects/5746f4afce8d0e00360bd712/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/5746f4afce8d0e00360bd712)
