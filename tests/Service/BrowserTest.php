@@ -10,6 +10,7 @@ namespace AnimeDb\Bundle\AniDbBrowserBundle\Tests\Service;
 
 use AnimeDb\Bundle\AniDbBrowserBundle\Service\Browser;
 use AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse;
+use AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair;
 use Guzzle\Http\Client;
 use Guzzle\Http\Message\RequestInterface;
 use Guzzle\Http\Message\Response;
@@ -82,24 +83,31 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
      */
     protected $response;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|ResponseRepair
+     */
+    protected $response_repair;
+
     protected function setUp()
     {
         $this->client = $this
-            ->getMockBuilder('\Guzzle\Http\Client')
+            ->getMockBuilder('Guzzle\Http\Client')
             ->disableOriginalConstructor()
             ->getMock();
         $this->cache = $this
-            ->getMockBuilder('\AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse')
+            ->getMockBuilder('AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->request = $this->getMock('\Guzzle\Http\Message\RequestInterface');
+        $this->request = $this->getMock('Guzzle\Http\Message\RequestInterface');
+        $this->response_repair = $this->getMock('AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair');
         $this->response = $this
-            ->getMockBuilder('\Guzzle\Http\Message\Response')
+            ->getMockBuilder('Guzzle\Http\Message\Response')
             ->disableOriginalConstructor()
             ->getMock();
 
         $this->browser = new Browser(
             $this->client,
+            $this->response_repair,
             $this->host,
             $this->api_prefix,
             $this->api_client,
@@ -208,6 +216,18 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
                 ->method('getBody')
                 ->with(true)
                 ->will($this->returnValue(gzencode($data)));
+            $this->response_repair
+                ->expects($this->once())
+                ->method('repair')
+                ->with($data)
+                ->will($this->returnValue($data));
+        } else {
+            $this->response
+                ->expects($this->never())
+                ->method('getBody');
+            $this->response_repair
+                ->expects($this->never())
+                ->method('repair');
         }
     }
 
