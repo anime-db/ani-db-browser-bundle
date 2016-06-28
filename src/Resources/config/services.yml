@@ -21,7 +21,7 @@ services:
 
     anime_db.ani_db.browser.cache:
         class: AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse
-        arguments: [ '%anime_db.ani_db.cache_response_dir%' ]
+        arguments: [ '@filesystem', '%anime_db.ani_db.cache_response_dir%' ]
         public: false
 
     anime_db.ani_db.browser.response_repair:

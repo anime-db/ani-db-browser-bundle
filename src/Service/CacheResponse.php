@@ -8,6 +8,8 @@
  */
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Service;
 
+use Symfony\Component\Filesystem\Filesystem;
+
 /**
  * Cache response.
  *
@@ -16,15 +18,22 @@ namespace AnimeDb\Bundle\AniDbBrowserBundle\Service;
 class CacheResponse
 {
     /**
+     * @var Filesystem
+     */
+    protected $fs;
+
+    /**
      * @var string
      */
     protected $cache_dir;
 
     /**
+     * @param Filesystem $fs
      * @param string $cache_dir
      */
-    public function __construct($cache_dir)
+    public function __construct(Filesystem $fs, $cache_dir)
     {
+        $this->fs = $fs;
         $this->cache_dir = $cache_dir;
     }
 
@@ -35,11 +44,9 @@ class CacheResponse
      */
     public function get($url)
     {
-        if (is_dir($this->cache_dir)) {
-            $filename = $this->getFilename($url);
-            if (file_exists($filename) && filemtime($filename) >= time()) {
-                return file_get_contents($filename);
-            }
+        $filename = $this->getFilename($url);
+        if ($this->fs->exists($filename) && filemtime($filename) >= time()) {
+            return file_get_contents($filename);
         }
 
         return null;
@@ -53,12 +60,9 @@ class CacheResponse
     public function set($request, $url, $response)
     {
         if ($expires = $this->getRequestExpires($request)) {
-            if (!is_dir($this->cache_dir)) {
-                mkdir($this->cache_dir, 0755, true);
-            }
             $filename = $this->getFilename($url);
-            file_put_contents($filename, $response);
-            touch($filename, $expires);
+            $this->fs->dumpFile($filename, $response);
+            $this->fs->touch($filename, $expires);
         }
     }
 

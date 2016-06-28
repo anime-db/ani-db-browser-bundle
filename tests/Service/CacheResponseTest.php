@@ -9,9 +9,15 @@
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Tests\Service;
 
 use AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse;
+use Symfony\Component\Filesystem\Filesystem;
 
 class CacheResponseTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|Filesystem
+     */
+    protected $fs;
+
     /**
      * @var string
      */
@@ -29,24 +35,16 @@ class CacheResponseTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $this->fs = new Filesystem();
         $this->dir = sys_get_temp_dir().'/unit-test/';
         $this->filename = $this->dir.md5('foo').'.xml';
-        $this->cache = new CacheResponse($this->dir);
-        if (!is_dir($this->dir)) {
-            mkdir($this->dir, 0755);
-        }
+        $this->cache = new CacheResponse($this->fs, $this->dir);
+        $this->fs->mkdir($this->dir, 0755);
     }
 
     public function tearDown()
     {
-        if (is_dir($this->dir)) {
-            foreach (scandir($this->dir) as $value) {
-                if ($value[0] != '.') {
-                    @unlink($this->dir.'/'.$value);
-                }
-            }
-            rmdir($this->dir);
-        }
+        $this->fs->remove($this->dir);
     }
 
     public function testGetNoDir()
@@ -62,14 +60,14 @@ class CacheResponseTest extends \PHPUnit_Framework_TestCase
 
     public function testGetExpired()
     {
-        file_put_contents($this->filename, '');
-        touch($this->filename, time() - 60);
+        $this->fs->dumpFile($this->filename, '');
+        $this->fs->touch($this->filename, time() - 60);
         $this->assertNull($this->cache->get('foo'));
     }
 
     public function testGet()
     {
-        file_put_contents($this->filename, 'bar');
+        $this->fs->dumpFile($this->filename, 'bar');
         $this->assertEquals('bar', $this->cache->get('foo'));
     }
 
@@ -82,7 +80,7 @@ class CacheResponseTest extends \PHPUnit_Framework_TestCase
         ];
         foreach ($requests as $request) {
             $this->cache->set($request, 'foo', 'bar');
-            $this->assertFalse(file_exists($this->filename));
+            $this->assertFalse($this->fs->exists($this->filename));
         }
     }
 
