@@ -25,6 +25,5 @@
         "symfony/expression-language" : ">=2.3.17",
         "symfony/config" : ">=2.3.17",
         "symfony/http-kernel" : ">=2.3.17"
-    },
-    "minimum-stability" : "dev"
+    }
 }

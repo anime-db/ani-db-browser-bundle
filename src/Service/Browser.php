@@ -143,9 +143,7 @@ class Browser
 
         // try get response from cache
         if ($force || !($this->cache instanceof CacheResponse) || !($response = $this->cache->get($path))) {
-            $request = $this->client->get($path);
-            $request->setHeader('User-Agent', $this->app_code);
-            $response = $request->send();
+            $response = $this->client->get($path)->setHeader('User-Agent', $this->app_code)->send();
             if ($response->isError()) {
                 throw new \RuntimeException("Failed execute request '{$request}' to the server '".$this->getApiHost()."'");
             }
