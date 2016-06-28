@@ -17,6 +17,6 @@ class ResponseRepair
      */
     public function repair($content)
     {
-        return str_replace(htmlspecialchars_decode('&#119047;'), '', $content);
+        return str_replace("\xf0\x9d\x84\x87", '', $content); // \u1D107
     }
 }
