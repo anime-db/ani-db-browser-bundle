@@ -16,26 +16,31 @@ class GuzzleClient implements ClientInterface
     /**
      * @var Client
      */
-    private $client;
-
-    /**
-     * @var string
-     */
-    private $api_prefix;
-
-    /**
-     * @var string
-     */
-    private $app_code;
+    protected $client;
 
     /**
      * @var ResponseRepair
      */
-    private $response_repair;
+    protected $repair;
+
+    /**
+     * @var string
+     */
+    protected $api_prefix;
+
+    /**
+     * @var string
+     */
+    protected $app_code;
+
+    /**
+     * @var array
+     */
+    protected $request_params = [];
 
     /**
      * @param Client $client
-     * @param ResponseRepair $response_repair
+     * @param ResponseRepair $repair
      * @param string $api_prefix
      * @param string $api_client
      * @param string $api_clientver
@@ -44,7 +49,7 @@ class GuzzleClient implements ClientInterface
      */
     public function __construct(
         Client $client,
-        ResponseRepair $response_repair,
+        ResponseRepair $repair,
         $api_prefix,
         $api_client,
         $api_clientver,
@@ -53,14 +58,18 @@ class GuzzleClient implements ClientInterface
     ) {
         $this->client = $client;
         $this->app_code = $app_code;
-        $this->response_repair = $response_repair;
-        $this->api_prefix = $api_prefix.
-            (strpos($api_prefix, '?') !== false ? '&' : '?').
-            http_build_query([
-                'client' => $api_client,
-                'clientver' => $api_clientver,
-                'protover' => $api_protover,
-            ]);
+        $this->repair = $repair;
+
+        $query = [];
+        if ($api_prefix) {
+            parse_str(parse_url($api_prefix, PHP_URL_QUERY), $query);
+            $this->api_prefix = parse_url($api_prefix, PHP_URL_PATH);
+        }
+        $this->request_params = [
+            'client' => $api_client,
+            'clientver' => $api_clientver,
+            'protover' => $api_protover,
+        ] + $query;
     }
 
     /**
@@ -96,12 +105,13 @@ class GuzzleClient implements ClientInterface
     public function get($request, array $params = [])
     {
         $request = $this->client->get(
-            $this->api_prefix.'&request='.$request.($params ? '&'.http_build_query($params) : '')
+            $this->api_prefix,
+            null,
+            [
+                'query' => $this->request_params + ['request' => $request] + $params,
+                'headers' => $this->app_code ? ['User-Agent' => $this->app_code] : [],
+            ]
         );
-
-        if ($this->app_code) {
-            $request->setHeader('User-Agent', $this->app_code);
-        }
 
         $response = $request->send();
 
@@ -113,6 +123,6 @@ class GuzzleClient implements ClientInterface
             ));
         }
 
-        return $this->response_repair->repair(gzdecode($response->getBody(true))); // repair
+        return $this->repair->repair(gzdecode($response->getBody(true))); // repair
     }
 }
