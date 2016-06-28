@@ -3,6 +3,7 @@ services:
         class: AnimeDb\Bundle\AniDbBrowserBundle\Service\Browser
         arguments:
             - '@anime_db.ani_db.browser.client'
+            - '@anime_db.ani_db.browser.response_repair'
             - '%anime_db.ani_db.host%'
             - '%anime_db.ani_db.api.prefix%'
             - '%anime_db.ani_db.api.client%'
@@ -21,4 +22,8 @@ services:
     anime_db.ani_db.browser.cache:
         class: AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse
         arguments: [ '%anime_db.ani_db.cache_response_dir%' ]
+        public: false
+
+    anime_db.ani_db.browser.response_repair:
+        class: AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair
         public: false

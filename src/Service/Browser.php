@@ -8,6 +8,7 @@
  */
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Service;
 
+use AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair;
 use Symfony\Component\DomCrawler\Crawler;
 use Guzzle\Http\Client;
 
@@ -50,7 +51,13 @@ class Browser
     private $cache;
 
     /**
+     * @var ResponseRepair
+     */
+    private $response_repair;
+
+    /**
      * @param Client $client
+     * @param ResponseRepair $response_repair
      * @param string $host
      * @param string $api_prefix
      * @param string $api_client
@@ -61,6 +68,7 @@ class Browser
      */
     public function __construct(
         Client $client,
+        ResponseRepair $response_repair,
         $host,
         $api_prefix,
         $api_client,
@@ -80,6 +88,7 @@ class Browser
         $this->api_prefix = $api_prefix;
         $this->app_code = $app_code;
         $this->image_prefix = $image_prefix;
+        $this->response_repair = $response_repair;
     }
 
     /**
@@ -149,7 +158,7 @@ class Browser
      * @param array $params
      * @param bool $force
      *
-     * @return Crawler
+     * @return string
      */
     public function getContent($request, array $params = [], $force = false)
     {
@@ -162,6 +171,7 @@ class Browser
                 throw new \RuntimeException("Failed execute request '{$request}' to the server '".$this->getApiHost()."'");
             }
             $response = gzdecode($response->getBody(true));
+            $response = $this->response_repair->repair($response); // repair
 
             // cache response
             if ($this->cache instanceof CacheResponse) {
