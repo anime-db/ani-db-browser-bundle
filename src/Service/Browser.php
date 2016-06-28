@@ -1,6 +1,6 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
@@ -13,7 +13,7 @@ use Symfony\Component\DomCrawler\Crawler;
 use Guzzle\Http\Client;
 
 /**
- * Browser
+ * Browser.
  *
  * @link http://anidb.net/
  * @link http://wiki.anidb.net/w/HTTP_API_Definition
@@ -80,9 +80,9 @@ class Browser
         $this->client = $client;
         $api_prefix .= strpos($api_prefix, '?') !== false ? '&' : '?';
         $api_prefix .= http_build_query([
-            'client'    => $api_client,
+            'client' => $api_client,
             'clientver' => $api_clientver,
-            'protover'  => $api_protover
+            'protover' => $api_protover,
         ]);
         $this->host = $host;
         $this->api_prefix = $api_prefix;

@@ -1,6 +1,6 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
@@ -242,10 +242,10 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         return $this->api_prefix.
             (strpos($this->api_prefix, '?') !== false ? '&' : '?').
             http_build_query(array_merge([
-                'client'    => $this->api_client,
+                'client' => $this->api_client,
                 'clientver' => $this->api_clientver,
-                'protover'  => $this->api_protover,
-                'request'   => $request
+                'protover' => $this->api_protover,
+                'request' => $request,
             ], $params));
     }
 

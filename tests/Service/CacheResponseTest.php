@@ -1,6 +1,6 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
@@ -61,14 +61,14 @@ class CacheResponseTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testGetExpired()
-    { 
+    {
         file_put_contents($this->filename, '');
-        touch($this->filename, time()-60);
+        touch($this->filename, time() - 60);
         $this->assertNull($this->cache->get('foo'));
     }
 
     public function testGet()
-    { 
+    {
         file_put_contents($this->filename, 'bar');
         $this->assertEquals('bar', $this->cache->get('foo'));
     }

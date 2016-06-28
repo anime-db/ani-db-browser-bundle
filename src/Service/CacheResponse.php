@@ -1,6 +1,6 @@
 <?php
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
@@ -9,7 +9,7 @@
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Service;
 
 /**
- * Cache response
+ * Cache response.
  *
  * @link http://wiki.anidb.net/w/HTTP_API_Definition
  */
@@ -73,7 +73,7 @@ class CacheResponse
     }
 
     /**
-     * Get cache request expires
+     * Get cache request expires.
      *
      * @link http://wiki.anidb.net/w/HTTP_API_Definition
      *
