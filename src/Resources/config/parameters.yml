@@ -8,7 +8,7 @@ parameters:
     anime_db.ani_db.app_client: 'animedbplugin'
     anime_db.ani_db.app_version: 2
     anime_db.ani_db.app_code: 'api-team-8069EC4798E98A3BC14382D9DAA2498C'
-    anime_db.ani_db.cache_response_dir: '%kernel.cache_dir%/ani_db_response/'
+    anime_db.ani_db.cache.dir: '%kernel.cache_dir%/ani_db_response/'
 
     anime_db.ani_db.image_prefix: 'http://img7.anidb.net/pics/anime/'
     anime_db.ani_db.cache.requests:
