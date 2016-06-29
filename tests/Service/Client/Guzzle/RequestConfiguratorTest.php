@@ -46,25 +46,25 @@ class RequestConfiguratorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['proxy' => $proxy], $this->configurator->getOptions());
     }
 
-    public function testSetClient()
+    public function testSetAppClient()
     {
-        $client = 'my_client';
+        $app_client = 'my_app_client';
 
-        $this->assertEquals($this->configurator, $this->configurator->setClient($client));
-        $this->assertEquals(['query' => ['client' => $client]], $this->configurator->getOptions());
+        $this->assertEquals($this->configurator, $this->configurator->setAppCode($app_client));
+        $this->assertEquals(['query' => ['client' => $app_client]], $this->configurator->getOptions());
     }
 
-    public function testSetClientVersion()
+    public function testSetVersion()
     {
-        $client_version = 'my_client_version';
+        $app_version = 123;
 
-        $this->assertEquals($this->configurator, $this->configurator->setClientVersion($client_version));
-        $this->assertEquals(['query' => ['clientver' => $client_version]], $this->configurator->getOptions());
+        $this->assertEquals($this->configurator, $this->configurator->setAppVersion($app_version));
+        $this->assertEquals(['query' => ['clientver' => $app_version]], $this->configurator->getOptions());
     }
 
     public function testSetProtocolVersion()
     {
-        $protocol_version = 'my_protocol_version';
+        $protocol_version = 123;
 
         $this->assertEquals($this->configurator, $this->configurator->setProtocolVersion($protocol_version));
         $this->assertEquals(['query' => ['protover' => $protocol_version]], $this->configurator->getOptions());
@@ -91,27 +91,27 @@ class RequestConfiguratorTest extends \PHPUnit_Framework_TestCase
     public function testWithRequestTryOverrideQueryParameters()
     {
         $request = 'foo';
-        $client = 'my_client';
-        $client_version = 'my_clientver';
-        $protocol_version = 'my_protover';
+        $app_client = 'my_app_client';
+        $app_version = 123;
+        $protocol_version = 456;
         $query = [
             'client' => 'bad_client',
-            'clientver' => 'bad_clientver',
-            'protover' => 'bad_protover',
+            'clientver' => 0,
+            'protover' => 0,
             'request' => 'bad',
         ];
         $options = [
             'query' => [
-                'client' => $client,
-                'clientver' => $client_version,
+                'client' => $app_client,
+                'clientver' => $app_version,
                 'protover' => $protocol_version,
                 'request' => $request,
             ],
         ];
 
         $new = $this->configurator
-            ->setClient($client)
-            ->setClientVersion($client_version)
+            ->setAppClient($app_client)
+            ->setAppVersion($app_version)
             ->setProtocolVersion($protocol_version)
             ->withRequest($request, $query);
 

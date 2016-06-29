@@ -17,10 +17,11 @@ services:
     anime_db.ani_db.browser.client.guzzle.request_configurator:
         class: AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Guzzle\RequestConfigurator
         calls:
-            - [setAppCode, ['%anime_db.ani_db.app_code%']] # TODO need set from DI configurator
-            - [setClient, ['%anime_db.ani_db.api.client%']]
-            - [setClientVersion, ['%anime_db.ani_db.api.clientver%']]
             - [setProtocolVersion, ['%anime_db.ani_db.api.protover%']]
+            # TODO need set from DI configurator
+            - [setAppCode, ['%anime_db.ani_db.app_code%']]
+            - [setAppClient, ['%anime_db.ani_db.app_client%']]
+            - [setAppVersion, ['%anime_db.ani_db.app_version%']]
         public: false
 
     anime_db.ani_db.browser.response_repair:

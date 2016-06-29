@@ -30,6 +30,18 @@ class RequestConfigurator
     }
 
     /**
+     * @param string $app_client
+     *
+     * @return RequestConfigurator
+     */
+    public function setAppClient($app_client)
+    {
+        $this->options[RequestOptions::QUERY]['client'] = $app_client;
+
+        return $this;
+    }
+
+    /**
      * @param int $timeout
      *
      * @return RequestConfigurator
@@ -54,25 +66,13 @@ class RequestConfigurator
     }
 
     /**
-     * @param string $client
+     * @param string $app_version
      *
      * @return RequestConfigurator
      */
-    public function setClient($client)
+    public function setAppVersion($app_version)
     {
-        $this->options[RequestOptions::QUERY]['client'] = $client;
-
-        return $this;
-    }
-
-    /**
-     * @param string $client_version
-     *
-     * @return RequestConfigurator
-     */
-    public function setClientVersion($client_version)
-    {
-        $this->options[RequestOptions::QUERY]['clientver'] = $client_version;
+        $this->options[RequestOptions::QUERY]['clientver'] = $app_version;
 
         return $this;
     }
