@@ -30,6 +30,22 @@ class RequestConfiguratorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['headers' => ['User-Agent' => $app_code]], $this->configurator->getOptions());
     }
 
+    public function testSetAppClient()
+    {
+        $app_client = 'my_app_client';
+
+        $this->assertEquals($this->configurator, $this->configurator->setAppClient($app_client));
+        $this->assertEquals(['query' => ['client' => $app_client]], $this->configurator->getOptions());
+    }
+
+    public function testSetAppVersion()
+    {
+        $app_version = 123;
+
+        $this->assertEquals($this->configurator, $this->configurator->setAppVersion($app_version));
+        $this->assertEquals(['query' => ['clientver' => $app_version]], $this->configurator->getOptions());
+    }
+
     public function testSetTimeout()
     {
         $timeout = 123;
@@ -44,22 +60,6 @@ class RequestConfiguratorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($this->configurator, $this->configurator->setProxy($proxy));
         $this->assertEquals(['proxy' => $proxy], $this->configurator->getOptions());
-    }
-
-    public function testSetAppClient()
-    {
-        $app_client = 'my_app_client';
-
-        $this->assertEquals($this->configurator, $this->configurator->setAppCode($app_client));
-        $this->assertEquals(['query' => ['client' => $app_client]], $this->configurator->getOptions());
-    }
-
-    public function testSetVersion()
-    {
-        $app_version = 123;
-
-        $this->assertEquals($this->configurator, $this->configurator->setAppVersion($app_version));
-        $this->assertEquals(['query' => ['clientver' => $app_version]], $this->configurator->getOptions());
     }
 
     public function testSetProtocolVersion()
