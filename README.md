@@ -72,14 +72,14 @@ Get data for anime [Seikai no Monshou](http://anidb.net/perl-bin/animedb.pl?show
 ([wiki](https://wiki.anidb.info/w/HTTP_API_Definition#Anime)):
 
 ```php
-$this->get('anime_db.ani_db.browser')->getContent('anime', ['aid' => 1]);
+$content = $this->get('anime_db.ani_db.browser')->getContent('anime', ['aid' => 1]);
 ```
 
 Get [DomCrawler](http://symfony.com/doc/current/components/dom_crawler.html) for Hot Anime
 ([wiki](https://wiki.anidb.info/w/HTTP_API_Definition#Hot_Anime)):
 
 ```php
-$this->get('anime_db.ani_db.browser')->getCrawler('hotanime');
+$crawler = $this->get('anime_db.ani_db.browser')->getCrawler('hotanime');
 ```
 
 ## Custom client
