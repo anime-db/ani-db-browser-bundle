@@ -3,18 +3,24 @@ services:
         class: AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\GuzzleClient
         arguments:
             - '@anime_db.ani_db.browser.client.guzzle.guzzle'
+            - '@anime_db.ani_db.browser.client.guzzle.request_configurator'
             - '@anime_db.ani_db.browser.response_repair'
             - '%anime_db.ani_db.api.prefix%'
-            - '%anime_db.ani_db.api.client%'
-            - '%anime_db.ani_db.api.clientver%'
-            - '%anime_db.ani_db.api.protover%'
-            - '%anime_db.ani_db.app_code%'
         public: false
 
     anime_db.ani_db.browser.client.guzzle.guzzle:
         class: GuzzleHttp\Client
         arguments:
             base_uri: '%anime_db.ani_db.api.host%'
+        public: false
+
+    anime_db.ani_db.browser.client.guzzle.request_configurator:
+        class: AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Guzzle\RequestConfigurator
+        calls:
+            - [setAppCode, ['%anime_db.ani_db.app_code%']] # TODO need set from DI configurator
+            - [setClient, ['%anime_db.ani_db.api.client%']]
+            - [setClientVersion, ['%anime_db.ani_db.api.clientver%']]
+            - [setProtocolVersion, ['%anime_db.ani_db.api.protover%']]
         public: false
 
     anime_db.ani_db.browser.response_repair:
