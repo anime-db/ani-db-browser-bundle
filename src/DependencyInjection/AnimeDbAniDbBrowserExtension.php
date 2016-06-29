@@ -26,13 +26,12 @@ class AnimeDbAniDbBrowserExtension extends Extension
         $loader->load('services.yml');
 
         $config = $this->processConfiguration(new Configuration(), $configs);
-        $config = $this->mergeDefaultConfig($config);
 
         $container
             ->getDefinition('anime_db.ani_db.browser.client.guzzle.request_configurator')
-            ->addMethodCall('setAppVersion', $config['app']['version'])
-            ->addMethodCall('setAppClient', $config['app']['client'])
-            ->addMethodCall('setAppCode', $config['app']['code']);
+            ->addMethodCall('setAppVersion', [$config['app']['version']])
+            ->addMethodCall('setAppClient', [$config['app']['client']])
+            ->addMethodCall('setAppCode', [$config['app']['code']]);
 
         $container->setAlias('anime_db.ani_db.browser.client', $this->getRealServiceName($config['client']));
     }
@@ -49,26 +48,5 @@ class AnimeDbAniDbBrowserExtension extends Extension
         }
 
         return $name;
-    }
-
-    /**
-     * @param array $config
-     *
-     * @return array
-     */
-    protected function mergeDefaultConfig(array $config)
-    {
-        $config = array_merge([
-            'client' => 'cache',
-            'app' => [],
-        ], $config);
-
-        $config['app'] = array_merge([
-            'version' => 0,
-            'client' => '',
-            'code' => '',
-        ], $config['app']);
-
-        return $config;
     }
 }
