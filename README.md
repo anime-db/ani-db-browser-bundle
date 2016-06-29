@@ -22,7 +22,7 @@ Pretty simple with [Composer](http://packagist.org), run:
 composer require anime-db/ani-db-browser-bundle
 ```
 
-Add CacheTimeKeeperBundle to your application kernel
+Add AnimeDbAniDbBrowserBundle to your application kernel
 
 ```php
 // app/appKernel.php
@@ -48,7 +48,7 @@ anime_db_ani_db_browser:
     # You can create a custom client. See below for instructions on creating your own client.
     client: 'cache'
 
-    # You must register a client and use it here
+    # You must register a client and use it here.
     # See for more info:
     #  - http://anidb.net/perl-bin/animedb.pl?show=client
     #  - https://wiki.anidb.net/w/UDP_Clients
@@ -126,8 +126,8 @@ Use custom driver:
 ```yml
 # app/config/config.yml
 
-anime_db_cache_time_keeper:
-    use_driver: 'cache_time_keeper.driver.custom'
+anime_db_ani_db_browser:
+    client: 'anime_db.ani_db.browser.client.custom'
 ```
 
 ## License
