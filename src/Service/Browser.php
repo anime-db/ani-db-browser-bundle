@@ -92,19 +92,20 @@ class Browser
 
         return $this;
     }
+
     /**
      * @deprecated get() is deprecated since AniDbBrowser 2.0. Use getCrawler() instead
      * @codeCoverageIgnore
      *
      * @param string $request
      * @param array $params
-     * @param bool $force
      *
      * @return Crawler
      */
-    public function get($request, array $params = [], $force = false)
+    public function get($request, array $params = [])
     {
         trigger_error('get() is deprecated since AniDbBrowser 2.0. Use getCrawler() instead', E_USER_DEPRECATED);
+
         return $this->getCrawler($request, $params);
     }
 

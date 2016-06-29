@@ -111,7 +111,6 @@ class AnimeDbAniDbBrowserExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadFailed(array $app)
     {
-
         $config = ['anime_db_ani_db_browser' => []];
 
         if ($app) {
