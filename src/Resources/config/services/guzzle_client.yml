@@ -6,7 +6,6 @@ services:
             - '@anime_db.ani_db.browser.client.guzzle.request_configurator'
             - '@anime_db.ani_db.browser.response_repair'
             - '%anime_db.ani_db.api.prefix%'
-        public: false
 
     anime_db.ani_db.browser.client.guzzle.guzzle:
         class: GuzzleHttp\Client

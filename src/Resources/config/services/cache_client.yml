@@ -5,7 +5,6 @@ services:
             - '@anime_db.ani_db.browser.client.guzzle'
             - '@anime_db.ani_db.browser.client.cache.expire_resolver'
             - '@anime_db.ani_db.browser.client.cache.storage.file'
-        public: false
 
     anime_db.ani_db.browser.client.cache.expire_resolver:
         class: AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Cache\ExpireResolver
