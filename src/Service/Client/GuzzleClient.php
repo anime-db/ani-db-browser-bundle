@@ -9,7 +9,7 @@
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Service\Client;
 
 use AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair;
-use Guzzle\Http\Client;
+use GuzzleHttp\Client;
 
 class GuzzleClient implements ClientInterface
 {
@@ -26,17 +26,12 @@ class GuzzleClient implements ClientInterface
     /**
      * @var string
      */
-    protected $api_prefix;
-
-    /**
-     * @var string
-     */
-    protected $app_code;
+    protected $url;
 
     /**
      * @var array
      */
-    protected $request_params = [];
+    protected $options = [];
 
     /**
      * @param Client $client
@@ -57,19 +52,17 @@ class GuzzleClient implements ClientInterface
         $app_code
     ) {
         $this->client = $client;
-        $this->app_code = $app_code;
         $this->repair = $repair;
 
-        $query = [];
-        if ($api_prefix) {
-            parse_str((string)parse_url($api_prefix, PHP_URL_QUERY), $query);
-            $this->api_prefix = (string)parse_url($api_prefix, PHP_URL_PATH);
-        }
-        $this->request_params = [
-            'client' => $api_client,
-            'clientver' => $api_clientver,
-            'protover' => $api_protover,
-        ] + $query;
+        $this->url = $api_prefix;
+        $this->options = [
+            'headers' => $app_code ? ['User-Agent' => $app_code] : [],
+            'query' => [
+                'client' => $api_client,
+                'clientver' => $api_clientver,
+                'protover' => $api_protover,
+            ]
+        ];
     }
 
     /**
@@ -79,7 +72,7 @@ class GuzzleClient implements ClientInterface
      */
     public function setTimeout($timeout)
     {
-        $this->client->setDefaultOption('timeout', $timeout);
+        $this->options['timeout'] = $timeout;
 
         return $this;
     }
@@ -91,7 +84,7 @@ class GuzzleClient implements ClientInterface
      */
     public function setProxy($proxy)
     {
-        $this->client->setDefaultOption('proxy', $proxy);
+        $this->options['proxy'] = $proxy;
 
         return $this;
     }
@@ -104,22 +97,12 @@ class GuzzleClient implements ClientInterface
      */
     public function get($request, array $params = [])
     {
-        $request = $this->client->get(
-            $this->api_prefix,
-            $this->app_code ? ['User-Agent' => $this->app_code] : [],
-            ['query' => $this->request_params + ['request' => $request] + $params]
-        );
+        // add more query params
+        $options = $this->options;
+        $options['query'] = $options['query'] + ['request' => $request] + $params;
 
-        $response = $request->send();
+        $response = $this->client->request('GET', $this->url, $options);
 
-        if ($response->isError()) {
-            throw new \RuntimeException(sprintf(
-                'Failed execute request "%s" to the server "%s"',
-                $request,
-                $this->client->getBaseUrl()
-            ));
-        }
-
-        return $this->repair->repair(gzdecode($response->getBody(true))); // repair
+        return $this->repair->repair(gzdecode($response->getBody())); // repair
     }
 }
