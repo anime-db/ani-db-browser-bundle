@@ -8,6 +8,7 @@
  */
 namespace AnimeDb\Bundle\AniDbBrowserBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -25,7 +26,7 @@ class Configuration implements ConfigurationInterface
      *         client: 'animedbplugin'
      *         code: 'api-team-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
      *
-     * @return TreeBuilder
+     * @return ArrayNodeDefinition
      */
     public function getConfigTreeBuilder()
     {
@@ -42,7 +43,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * @return TreeBuilder
+     * @return ArrayNodeDefinition
      */
     protected function getApp()
     {
