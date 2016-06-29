@@ -37,13 +37,13 @@ class CacheClientTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->client = $this->getMock('AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\ClientInterface');
+        $this->client = $this->getMock(ClientInterface::class);
         $this->resolver = $this
-            ->getMockBuilder('AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Cache\ExpireResolver')
+            ->getMockBuilder(ExpireResolver::class)
             ->disableOriginalConstructor()
             ->getMock();
         $this->storage = $this
-            ->getMock('AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Cache\Storage\StorageInterface');
+            ->getMock(StorageInterface::class);
 
         $this->cache_client = new CacheClient($this->client, $this->resolver, $this->storage);
     }
@@ -81,7 +81,7 @@ class CacheClientTest extends \PHPUnit_Framework_TestCase
         $this->resolver
             ->expects($this->once())
             ->method('getExpire')
-            ->with($request, $this->isInstanceOf('\DateTime'))
+            ->with($request, $this->isInstanceOf(\DateTime::class))
             ->will($this->returnValue(null));
 
         $this->client
@@ -124,7 +124,7 @@ class CacheClientTest extends \PHPUnit_Framework_TestCase
         $this->resolver
             ->expects($this->once())
             ->method('getExpire')
-            ->with($request, $this->isInstanceOf('\DateTime'))
+            ->with($request, $this->isInstanceOf(\DateTime::class))
             ->will($this->returnValue($expires));
 
         $this->client
@@ -155,7 +155,7 @@ class CacheClientTest extends \PHPUnit_Framework_TestCase
         $this->resolver
             ->expects($this->once())
             ->method('getExpire')
-            ->with($request, $this->isInstanceOf('\DateTime'))
+            ->with($request, $this->isInstanceOf(\DateTime::class))
             ->will($this->returnValue($expires));
 
         $this->client

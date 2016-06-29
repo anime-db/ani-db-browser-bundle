@@ -11,6 +11,7 @@ namespace AnimeDb\Bundle\AniDbBrowserBundle\Tests\Service\Client;
 use AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\GuzzleClient;
 use AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair;
 use GuzzleHttp\Client;
+use Psr\Http\Message\ResponseInterface;
 
 class GuzzleClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -41,8 +42,8 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->client = $this->getMock('GuzzleHttp\Client');
-        $this->repair = $this->getMock('AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair');
+        $this->client = $this->getMock(Client::class);
+        $this->repair = $this->getMock(ResponseRepair::class);
     }
 
     /**
@@ -152,7 +153,7 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         }
 
         $response = $this
-            ->getMockBuilder('Psr\Http\Message\ResponseInterface')
+            ->getMockBuilder(ResponseInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
         $response

@@ -13,13 +13,10 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AnimeDbAniDbBrowserExtensionTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Test load.
-     */
     public function testLoad()
     {
         /* @var $builder \PHPUnit_Framework_MockObject_MockObject|ContainerBuilder */
-        $builder = $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
+        $builder = $this->getMock(ContainerBuilder::class);
 
         $di = new AnimeDbAniDbBrowserExtension();
         $di->load([], $builder);

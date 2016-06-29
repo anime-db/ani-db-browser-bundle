@@ -52,7 +52,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->client = $this
-            ->getMockBuilder('AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\ClientInterface')
+            ->getMockBuilder(ClientInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -123,7 +123,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->browser->getCrawler($request, $params);
 
-        $this->assertInstanceOf('\Symfony\Component\DomCrawler\Crawler', $result);
+        $this->assertInstanceOf(Crawler::class, $result);
 
         // objects are not identical, but their content should match
         $this->assertEquals((new Crawler($this->xml))->html(), $result->html());
