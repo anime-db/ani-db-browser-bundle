@@ -49,7 +49,6 @@ class Configuration implements ConfigurationInterface
     {
         return (new TreeBuilder())
             ->root('app')
-                ->isRequired()
                 ->children()
                     ->integerNode('version')
                         ->isRequired()
@@ -62,6 +61,7 @@ class Configuration implements ConfigurationInterface
                         ->cannotBeEmpty()
                         ->isRequired()
                     ->end()
-                ->end();
+                ->end()
+                ->isRequired();
     }
 }
