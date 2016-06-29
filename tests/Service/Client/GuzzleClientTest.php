@@ -8,6 +8,7 @@
  */
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Tests\Service\Client;
 
+use AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Guzzle\RequestConfigurator;
 use AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\GuzzleClient;
 use AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair;
 use GuzzleHttp\Client;
@@ -18,7 +19,12 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|Client
      */
-    protected $client;
+    protected $guzzle;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|RequestConfigurator
+     */
+    protected $configurator;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|ResponseRepair
@@ -26,131 +32,55 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
     protected $repair;
 
     /**
-     * @var string
+     * @var GuzzleClient
      */
-    protected $api_client = 'api_client';
+    protected $client;
 
     /**
      * @var string
      */
-    protected $api_clientver = 'api_clientver';
-
-    /**
-     * @var string
-     */
-    protected $api_protover = 'api_protover';
+    protected $api_prefix = '/foo/bar';
 
     protected function setUp()
     {
-        $this->client = $this->getMock(Client::class);
+        $this->guzzle = $this->getMock(Client::class);
+        $this->configurator = $this->getMock(RequestConfigurator::class);
         $this->repair = $this->getMock(ResponseRepair::class);
+
+        $this->client = new GuzzleClient($this->guzzle, $this->configurator, $this->repair, $this->api_prefix);
     }
 
-    /**
-     * @param $api_prefix
-     * @param $app_code
-     *
-     * @return GuzzleClient
-     */
-    protected function buildGuzzleClient($api_prefix, $app_code)
+    public function testSetTimeout()
     {
-        return new GuzzleClient(
-            $this->client,
-            $this->repair,
-            $api_prefix,
-            $this->api_client,
-            $this->api_clientver,
-            $this->api_protover,
-            $app_code
-        );
+        $timeout = 123;
+        $this->configurator
+            ->expects($this->once())
+            ->method('setTimeout')
+            ->with($timeout)
+            ->will($this->returnSelf());
+
+        $this->assertEquals($this->client, $this->client->setTimeout($timeout));
     }
 
-    /**
-     * @param string $request
-     * @param array $params
-     *
-     * @return string
-     */
-    protected function buildApiSuffix($request, array $params)
+    public function testSetProxy()
     {
-        return
-            [
-                'client' => $this->api_client,
-                'clientver' => $this->api_clientver,
-                'protover' => $this->api_protover,
-            ] +
-            [
-                'request' => $request,
-            ] +
-            $params;
+        $proxy = '127.0.0.1';
+        $this->configurator
+            ->expects($this->once())
+            ->method('setProxy')
+            ->with($proxy)
+            ->will($this->returnSelf());
+
+        $this->assertEquals($this->client, $this->client->setProxy($proxy));
     }
 
-    /**
-     * @return array
-     */
-    public function getRequestParams()
-    {
-        $params = [];
-
-        $request_params = [
-            [[], []],
-            [['foo' => 123], ['foo' => 123]],
-            [['foo' => 123, 'request' => 456, 'client' => 789], ['foo' => 123]],
-        ];
-
-        foreach ([0, 123] as $timeout) {
-            foreach (['', '127.0.0.1'] as $proxy) {
-                foreach (['', 'my_app_code'] as $app_code) {
-                    foreach ($request_params as $request_param) {
-                        $params[] = [
-                            '/foo',
-                            $app_code,
-                            $request_param[0],
-                            $request_param[1],
-                            $app_code ? ['User-Agent' => $app_code] : [],
-                            $proxy,
-                            $timeout
-                        ];
-                    }
-                }
-            }
-        }
-
-        return $params;
-    }
-
-    /**
-     * @dataProvider getRequestParams
-     *
-     * @param string $api_prefix
-     * @param string $app_code
-     * @param array $params
-     * @param array $query
-     * @param array $headers
-     * @param string $proxy
-     * @param int $timeout
-     */
-    public function testGet($api_prefix, $app_code, array $params, array $query, array $headers, $proxy, $timeout)
+    public function testGet()
     {
         $request = 'my_request';
         $body = 'my_body';
         $body_repair = 'my_body_repair';
-        $options = [
-            'headers' => $headers,
-            'query' => $this->buildApiSuffix($request, $query)
-        ];
-
-        $client = $this->buildGuzzleClient($api_prefix, $app_code);
-
-        if ($proxy) {
-            $client->setProxy($proxy);
-            $options['proxy'] = $proxy;
-        }
-
-        if ($timeout) {
-            $client->setTimeout($timeout);
-            $options['timeout'] = $timeout;
-        }
+        $params = ['foo' => 123];
+        $options = ['bar' => 456];
 
         $response = $this
             ->getMockBuilder(ResponseInterface::class)
@@ -161,11 +91,21 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
             ->method('getBody')
             ->will($this->returnValue(gzencode($body)));
 
-        $this->client
+        $this->guzzle
             ->expects($this->once())
             ->method('request')
-            ->with('GET', $api_prefix, $options)
+            ->with('GET', $this->api_prefix, $options)
             ->will($this->returnValue($response));
+
+        $this->configurator
+            ->expects($this->once())
+            ->method('withRequest')
+            ->with($request, $params)
+            ->will($this->returnSelf());
+        $this->configurator
+            ->expects($this->once())
+            ->method('getOptions')
+            ->will($this->returnValue($options));
 
         $this->repair
             ->expects($this->once())
@@ -173,6 +113,6 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
             ->with($body)
             ->will($this->returnValue($body_repair));
 
-        $this->assertEquals($body_repair, $client->get($request, $params));
+        $this->assertEquals($body_repair, $this->client->get($request, $params));
     }
 }
