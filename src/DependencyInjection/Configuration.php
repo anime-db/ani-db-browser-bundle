@@ -29,32 +29,38 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $tree_builder = new TreeBuilder();
-        $tree_builder
+        return (new TreeBuilder())
             ->root('anime_db_ani_db_browser')
                 ->children()
                     ->scalarNode('client')
                         ->cannotBeEmpty()
                         ->defaultValue('cache')
                     ->end()
-                    ->arrayNode('app')
+                ->end()
+                ->append($this->getApp())
+            ->end();
+    }
+
+    /**
+     * @return TreeBuilder
+     */
+    protected function getApp()
+    {
+        return (new TreeBuilder())
+            ->root('app')
+                ->isRequired()
+                ->children()
+                    ->integerNode('version')
                         ->isRequired()
-                        ->children()
-                            ->integerNode('version')
-                                ->isRequired()
-                            ->end()
-                            ->scalarNode('client')
-                                ->cannotBeEmpty()
-                                ->isRequired()
-                            ->end()
-                            ->scalarNode('code')
-                                ->cannotBeEmpty()
-                                ->isRequired()
-                            ->end()
-                        ->end()
+                    ->end()
+                    ->scalarNode('client')
+                        ->cannotBeEmpty()
+                        ->isRequired()
+                    ->end()
+                    ->scalarNode('code')
+                        ->cannotBeEmpty()
+                        ->isRequired()
                     ->end()
                 ->end();
-
-        return $tree_builder;
     }
 }
