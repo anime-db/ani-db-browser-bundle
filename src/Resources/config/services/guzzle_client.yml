@@ -18,12 +18,4 @@ services:
         class: AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Guzzle\RequestConfigurator
         calls:
             - [setProtocolVersion, ['%anime_db.ani_db.api.protover%']]
-            # TODO need set from DI configurator
-            - [setAppCode, ['%anime_db.ani_db.app_code%']]
-            - [setAppClient, ['%anime_db.ani_db.app_client%']]
-            - [setAppVersion, ['%anime_db.ani_db.app_version%']]
-        public: false
-
-    anime_db.ani_db.browser.response_repair:
-        class: AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair
         public: false
