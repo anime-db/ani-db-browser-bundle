@@ -98,6 +98,7 @@ class RequestConfigurator
     public function withRequest($request, array $query = [])
     {
         $new = clone $this;
+        $new->options['query'] = isset($new->options['query']) ? $new->options['query'] : [];
         $new->options['query'] = $new->options['query'] + ['request' => $request] + $query;
 
         return $new;
