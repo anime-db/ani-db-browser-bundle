@@ -13,6 +13,7 @@ use AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\GuzzleClient;
 use AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 class GuzzleClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -77,10 +78,18 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
     public function testGet()
     {
         $request = 'my_request';
-        $body = 'my_body';
+        $bodyString = 'my_body';
         $body_repair = 'my_body_repair';
         $params = ['foo' => 123];
         $options = ['bar' => 456];
+
+        $body = $this
+            ->getMockBuilder(StreamInterface::class)
+            ->getMock();
+        $body
+            ->expects($this->once())
+            ->method('getContents')
+            ->will($this->returnValue($bodyString));
 
         $response = $this
             ->getMockBuilder(ResponseInterface::class)
@@ -89,7 +98,7 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         $response
             ->expects($this->once())
             ->method('getBody')
-            ->will($this->returnValue(gzencode($body)));
+            ->will($this->returnValue($body));
 
         $this->guzzle
             ->expects($this->once())
@@ -110,7 +119,7 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         $this->repair
             ->expects($this->once())
             ->method('repair')
-            ->with($body)
+            ->with($bodyString)
             ->will($this->returnValue($body_repair));
 
         $this->assertEquals($body_repair, $this->client->get($request, $params));

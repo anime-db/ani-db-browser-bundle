@@ -87,6 +87,6 @@ class GuzzleClient implements ClientInterface
         $options = $this->configurator->withRequest($request, $params)->getOptions();
         $response = $this->client->request('GET', $this->url, $options);
 
-        return $this->repair->repair(gzdecode($response->getBody())); // repair
+        return $this->repair->repair($response->getBody()->getContents()); // repair
     }
 }
