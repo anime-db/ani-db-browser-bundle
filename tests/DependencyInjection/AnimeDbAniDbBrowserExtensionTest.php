@@ -68,7 +68,6 @@ class AnimeDbAniDbBrowserExtensionTest extends \PHPUnit_Framework_TestCase
             ->with('setAppCode', [$config['anime_db_ani_db_browser']['app']['code']])
             ->will($this->returnSelf());
 
-
         /* @var $container \PHPUnit_Framework_MockObject_MockObject|ContainerBuilder */
         $container = $this->getMock(ContainerBuilder::class);
         $container
