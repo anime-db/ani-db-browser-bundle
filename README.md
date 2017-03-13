@@ -1,15 +1,14 @@
 ![Browser for AniDB.net](http://anime-db.org/bundles/animedboffsite/images/anidb.net.png)
 
-[![Latest Stable Version](https://poser.pugx.org/anime-db/ani-db-browser-bundle/v/stable.png)](https://packagist.org/packages/anime-db/ani-db-browser-bundle)
-[![Latest Unstable Version](https://poser.pugx.org/anime-db/ani-db-browser-bundle/v/unstable.png)](https://packagist.org/packages/anime-db/ani-db-browser-bundle)
-[![Total Downloads](https://poser.pugx.org/anime-db/ani-db-browser-bundle/downloads)](https://packagist.org/packages/anime-db/ani-db-browser-bundle)
-[![Build Status](https://travis-ci.org/anime-db/ani-db-browser-bundle.svg?branch=master)](https://travis-ci.org/anime-db/ani-db-browser-bundle)
-[![Code Coverage](https://scrutinizer-ci.com/g/anime-db/ani-db-browser-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/anime-db/ani-db-browser-bundle/?branch=master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/anime-db/ani-db-browser-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/anime-db/ani-db-browser-bundle/?branch=master)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/0e383920-eaf5-474a-b998-a00462485827/mini.png)](https://insight.sensiolabs.com/projects/0e383920-eaf5-474a-b998-a00462485827)
-[![StyleCI](https://styleci.io/repos/19101337/shield)](https://styleci.io/repos/19101337)
-[![Dependency Status](https://www.versioneye.com/user/projects/5746f4afce8d0e00360bd712/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/5746f4afce8d0e00360bd712)
-[![License](https://poser.pugx.org/anime-db/ani-db-browser-bundle/license.png)](https://packagist.org/packages/anime-db/ani-db-browser-bundle)
+[![Latest Stable Version](https://img.shields.io/packagist/v/anime-db/ani-db-browser-bundle.svg?maxAge=3600&label=stable)](https://packagist.org/packages/anime-db/ani-db-browser-bundle)
+[![Latest Unstable Version](https://img.shields.io/packagist/vpre/anime-db/ani-db-browser-bundle.svg?maxAge=3600&label=unstable)](https://packagist.org/packages/anime-db/ani-db-browser-bundle)
+[![Total Downloads](https://img.shields.io/packagist/dt/anime-db/ani-db-browser-bundle.svg?maxAge=3600)](https://packagist.org/packages/anime-db/ani-db-browser-bundle)
+[![Build Status](https://img.shields.io/travis/anime-db/ani-db-browser-bundle.svg?maxAge=3600)](https://travis-ci.org/anime-db/ani-db-browser-bundle)
+[![Coverage Status](https://img.shields.io/coveralls/anime-db/ani-db-browser-bundle.svg?maxAge=3600)](https://coveralls.io/github/anime-db/ani-db-browser-bundle?branch=master)
+[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/anime-db/ani-db-browser-bundle.svg?maxAge=3600)](https://scrutinizer-ci.com/g/anime-db/ani-db-browser-bundle/?branch=master)
+[![SensioLabs Insight](https://img.shields.io/sensiolabs/i/0e383920-eaf5-474a-b998-a00462485827.svg?maxAge=3600&label=SLInsight)](https://insight.sensiolabs.com/projects/0e383920-eaf5-474a-b998-a00462485827)
+[![StyleCI](https://styleci.io/repos/19101337/shield?branch=master)](https://styleci.io/repos/19101337)
+[![License](https://img.shields.io/packagist/l/anime-db/ani-db-browser-bundle.svg?maxAge=3600)](https://github.com/anime-db/ani-db-browser-bundle)
 
 Browser for AniDB.net
 =====================
