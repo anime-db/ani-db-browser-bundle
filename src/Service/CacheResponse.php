@@ -6,6 +6,7 @@
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
+
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Service;
 
 use Symfony\Component\Filesystem\Filesystem;
@@ -13,7 +14,7 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * Cache response.
  *
- * @link http://wiki.anidb.net/w/HTTP_API_Definition
+ * @see http://wiki.anidb.net/w/HTTP_API_Definition
  */
 class CacheResponse
 {
@@ -79,7 +80,7 @@ class CacheResponse
     /**
      * Get cache request expires.
      *
-     * @link http://wiki.anidb.net/w/HTTP_API_Definition
+     * @see http://wiki.anidb.net/w/HTTP_API_Definition
      *
      * @param string $request
      *

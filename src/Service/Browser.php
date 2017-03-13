@@ -6,6 +6,7 @@
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
+
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Service;
 
 use AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair;
@@ -15,8 +16,8 @@ use Guzzle\Http\Client;
 /**
  * Browser.
  *
- * @link http://anidb.net/
- * @link http://wiki.anidb.net/w/HTTP_API_Definition
+ * @see http://anidb.net/
+ * @see http://wiki.anidb.net/w/HTTP_API_Definition
  */
 class Browser
 {
