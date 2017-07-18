@@ -10,7 +10,7 @@
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Tests\Service;
 
 use AnimeDb\Bundle\AniDbBrowserBundle\Service\Browser;
-use AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\ClientInterface;
+use AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Client;
 use Symfony\Component\DomCrawler\Crawler;
 
 class BrowserTest extends \PHPUnit_Framework_TestCase
@@ -41,14 +41,14 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     private $browser;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|ClientInterface
+     * @var \PHPUnit_Framework_MockObject_MockObject|Client
      */
     private $client;
 
     protected function setUp()
     {
         $this->client = $this
-            ->getMockBuilder(ClientInterface::class)
+            ->getMockBuilder(Client::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;

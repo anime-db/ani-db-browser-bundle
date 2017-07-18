@@ -14,7 +14,7 @@ use AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Guzzle\RequestConfigurator;
 use AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair;
 use GuzzleHttp\Client;
 
-class GuzzleClient implements ClientInterface
+class GuzzleClient implements Client
 {
     /**
      * @var Client

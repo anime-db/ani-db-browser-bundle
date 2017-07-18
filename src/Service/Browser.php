@@ -10,7 +10,7 @@
 
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Service;
 
-use AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\ClientInterface;
+use AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Client;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -22,7 +22,7 @@ use Symfony\Component\DomCrawler\Crawler;
 class Browser
 {
     /**
-     * @var ClientInterface
+     * @var Client
      */
     protected $client;
 
@@ -42,12 +42,12 @@ class Browser
     protected $image_prefix;
 
     /**
-     * @param ClientInterface $client
-     * @param string          $host
-     * @param string          $api_host
-     * @param string          $image_prefix
+     * @param Client $client
+     * @param string $host
+     * @param string $api_host
+     * @param string $image_prefix
      */
-    public function __construct(ClientInterface $client, $host, $api_host, $image_prefix)
+    public function __construct(Client $client, $host, $api_host, $image_prefix)
     {
         $this->client = $client;
         $this->host = $host;

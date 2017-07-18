@@ -13,10 +13,10 @@ namespace AnimeDb\Bundle\AniDbBrowserBundle\Service\Client;
 use AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Cache\ExpireResolver;
 use AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Cache\Storage\StorageInterface;
 
-class CacheClient implements ClientInterface
+class CacheClient implements Client
 {
     /**
-     * @var ClientInterface
+     * @var Client
      */
     protected $client;
 
@@ -31,11 +31,11 @@ class CacheClient implements ClientInterface
     protected $storage;
 
     /**
-     * @param ClientInterface  $client
+     * @param Client  $client
      * @param ExpireResolver   $resolver
      * @param StorageInterface $storage
      */
-    public function __construct(ClientInterface $client, ExpireResolver $resolver, StorageInterface $storage)
+    public function __construct(Client $client, ExpireResolver $resolver, StorageInterface $storage)
     {
         $this->client = $client;
         $this->resolver = $resolver;

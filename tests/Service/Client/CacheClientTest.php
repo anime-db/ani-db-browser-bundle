@@ -12,12 +12,12 @@ namespace AnimeDb\Bundle\AniDbBrowserBundle\Tests\Service\Client;
 use AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Cache\ExpireResolver;
 use AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Cache\Storage\StorageInterface;
 use AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\CacheClient;
-use AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\ClientInterface;
+use AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Client;
 
 class CacheClientTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|ClientInterface
+     * @var \PHPUnit_Framework_MockObject_MockObject|Client
      */
     private $client;
 
@@ -38,7 +38,7 @@ class CacheClientTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->client = $this->getMock(ClientInterface::class);
+        $this->client = $this->getMock(Client::class);
         $this->resolver = $this
             ->getMockBuilder(ExpireResolver::class)
             ->disableOriginalConstructor()

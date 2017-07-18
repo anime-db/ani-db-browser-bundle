@@ -10,19 +10,19 @@
 
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Service\Client;
 
-interface ClientInterface
+interface Client
 {
     /**
      * @param int $timeout
      *
-     * @return ClientInterface
+     * @return Client
      */
     public function setTimeout($timeout);
 
     /**
      * @param string $proxy
      *
-     * @return ClientInterface
+     * @return Client
      */
     public function setProxy($proxy);
 
