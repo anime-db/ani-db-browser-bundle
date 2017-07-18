@@ -21,8 +21,6 @@ class Configuration implements ConfigurationInterface
      * Example config:
      *
      * anime_db_ani_db_browser:
-     *     client: 'cache'
-     *     image_prefix: 'http://img7.anidb.net/pics/anime/'
      *     api:
      *         host: 'http://api.anidb.net:9001'
      *         prefix: '/httpapi/'
@@ -38,16 +36,6 @@ class Configuration implements ConfigurationInterface
     {
         return (new TreeBuilder())
             ->root('anime_db_ani_db_browser')
-                ->children()
-                    ->scalarNode('client')
-                        ->cannotBeEmpty()
-                        ->defaultValue('cache')
-                    ->end()
-                    ->scalarNode('image_prefix')
-                        ->defaultValue('http://img7.anidb.net/pics/anime/')
-                        ->cannotBeEmpty()
-                    ->end()
-                ->end()
                 ->append($this->api())
                 ->append($this->app())
             ->end()

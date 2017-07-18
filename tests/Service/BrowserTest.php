@@ -10,123 +10,120 @@
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Tests\Service;
 
 use AnimeDb\Bundle\AniDbBrowserBundle\Service\Browser;
-use AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Client;
-use Symfony\Component\DomCrawler\Crawler;
+use AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair;
+use GuzzleHttp\Client as HttpClient;
+use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\StreamInterface;
 
 class BrowserTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var string
      */
-    private $host = 'host';
+    private $api_host;
 
     /**
      * @var string
      */
-    private $api_host = 'api_host';
+    private $api_prefix;
+
+    /**
+     * @var int
+     */
+    private $api_protover;
+
+    /**
+     * @var int
+     */
+    private $app_version;
 
     /**
      * @var string
      */
-    private $image_prefix = 'image_prefix';
+    private $app_client;
 
     /**
      * @var string
      */
-    private $xml = '<?xml version="1.0"?><root><text>Hello, world!</text></root>';
+    private $app_code;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|HttpClient
+     */
+    private $client;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|ResponseRepair
+     */
+    private $repair;
 
     /**
      * @var Browser
      */
     private $browser;
 
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|Client
-     */
-    private $client;
-
     protected function setUp()
     {
-        $this->client = $this
-            ->getMockBuilder(Client::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $this->client = $this->getMock(HttpClient::class);
+        $this->repair = $this->getMock(ResponseRepair::class);
 
-        $this->browser = new Browser($this->client, $this->host, $this->api_host, $this->image_prefix);
+        $this->browser = new Browser(
+            $this->client,
+            $this->repair,
+            $this->api_host,
+            $this->api_prefix,
+            $this->api_protover,
+            $this->app_version,
+            $this->app_client,
+            $this->app_code
+        );
     }
 
-    public function testGetImageUrl()
-    {
-        $this->assertEquals($this->image_prefix.'foo', $this->browser->getImageUrl('foo'));
-    }
-
-    public function testGetHost()
-    {
-        $this->assertEquals($this->host, $this->browser->getHost());
-    }
-
-    public function testGetApiHost()
-    {
-        $this->assertEquals($this->api_host, $this->browser->getApiHost());
-    }
-
-    public function testSetTimeout()
-    {
-        $timeout = 123;
-        $this->client
-            ->expects($this->once())
-            ->method('setTimeout')
-            ->with($timeout)
-        ;
-
-        $this->assertEquals($this->browser, $this->browser->setTimeout($timeout));
-    }
-
-    public function testSetProxy()
-    {
-        $proxy = '127.0.0.1';
-        $this->client
-            ->expects($this->once())
-            ->method('setProxy')
-            ->with($proxy)
-        ;
-
-        $this->assertEquals($this->browser, $this->browser->setProxy($proxy));
-    }
-
-    public function testGetContent()
+    public function testGet()
     {
         $request = 'foo';
         $params = ['bar' => 'baz'];
+        $options = $params + [
+            'request' => $request,
+            'protover' => $this->api_protover,
+            'clientver' => $this->app_version,
+            'client' => $this->app_client,
+            'headers' => [
+                'User-Agent' => $this->app_code,
+            ],
+        ];
+        $xml = '<?xml version="1.0"?><root><text>Hello, world!</text></root>';
+        $repair = 'foo';
+
+        $stream = $this->getMock(StreamInterface::class);
+        $stream
+            ->expects($this->once())
+            ->method('getContents')
+            ->will($this->returnValue($xml))
+        ;
+
+
+        $message = $this->getMock(MessageInterface::class);
+        $message
+            ->expects($this->once())
+            ->method('getBody')
+            ->will($this->returnValue($stream))
+        ;
 
         $this->client
             ->expects($this->once())
-            ->method('get')
-            ->with($request, $params)
-            ->will($this->returnValue($this->xml))
+            ->method('request')
+            ->with('GET', $this->api_host.$this->api_prefix, $options)
+            ->will($this->returnValue($message))
         ;
 
-        $this->assertEquals($this->xml, $this->browser->getContent($request, $params));
-    }
-
-    public function testGetCrawler()
-    {
-        $request = 'foo';
-        $params = ['bar' => 'baz'];
-
-        $this->client
+        $this->repair
             ->expects($this->once())
-            ->method('get')
-            ->with($request, $params)
-            ->will($this->returnValue($this->xml))
+            ->method('repair')
+            ->with($xml)
+            ->will($this->returnValue($repair))
         ;
 
-        $result = $this->browser->getCrawler($request, $params);
-
-        $this->assertInstanceOf(Crawler::class, $result);
-
-        // objects are not identical, but their content should match
-        $this->assertEquals((new Crawler($this->xml))->html(), $result->html());
+        $this->assertEquals($repair, $this->browser->get($request, $params));
     }
 }

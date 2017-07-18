@@ -1,16 +1,20 @@
-imports:
-    - { resource: 'services/guzzle_client.yml' }
-    - { resource: 'services/cache_client.yml' }
-
 services:
     anime_db.ani_db.browser:
         class: AnimeDb\Bundle\AniDbBrowserBundle\Service\Browser
         arguments:
             - '@anime_db.ani_db.browser.client'
-            - '%anime_db.ani_db.host%'
+            - '@anime_db.ani_db.browser.response_repair'
+            - ~
+            - ~
+            - ~
+            - ~
             - ~
             - ~
 
     anime_db.ani_db.browser.response_repair:
         class: AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair
+        public: false
+
+    anime_db.ani_db.browser.client:
+        class: GuzzleHttp\Client
         public: false

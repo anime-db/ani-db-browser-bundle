@@ -1,45 +1,24 @@
 UPGRADE FROM 1.x to 2.0
 =======================
 
-### Browser
+Browser
+-------
 
- * The `Browser::get()` method has been deprecated since 2.0 and will be removed in future.
+* The `Browser::get()` return content, not a `DomCrawler`.
 
-    Before:
+   Before:
 
-    ```php
-    $crawler = $this->get('anime_db.ani_db.browser')->get('anime', ['aid' => 1]);
-    ```
+   ```php
+   $crawler = $this->get('anime_db.ani_db.browser')->get('anime', ['aid' => 1]);
+   ```
 
-    After:
+   After:
 
-    ```php
-    $crawler = $this->get('anime_db.ani_db.browser')->getCrawler('anime', ['aid' => 1]);
-    ```
+   ```php
+   use Symfony\Component\DomCrawler\Crawler;
 
- * The `Browser::get()` method now is not support force request and ignore response cache. Earlier always used response
- caching. Now you can disable the cache for all requests or execute the request directly from the client.
+   $content = $this->get('anime_db.ani_db.browser')->get('anime', ['aid' => 1]);
+   $crawler = new Crawler($content);
+   ```
 
-    Before:
-
-    ```php
-    $crawler = $this->get('anime_db.ani_db.browser')->get('anime', ['aid' => 1], true);
-    ```
-
-    After:
-
-    ```php
-    use Symfony\Component\DomCrawler\Crawler;
-
-    $content = $this->get('anime_db.ani_db.browser.client.guzzle')->get('anime', ['aid' => 1]);
-    $crawler = new Crawler($content)
-    ```
-
-    For disable all cache configure bundle:
-
-    ```yml
-    # app/config/config.yml
-
-    anime_db_ani_db_browser:
-        client: 'guzzle'
-    ```
+* The `Browser::get()` method now is not cache response.
