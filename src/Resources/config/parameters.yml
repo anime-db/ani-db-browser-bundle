@@ -1,9 +1,5 @@
 parameters:
     anime_db.ani_db.host: 'http://anidb.net'
-    anime_db.ani_db.api.host: 'http://api.anidb.net:9001'
-    anime_db.ani_db.api.prefix: '/httpapi'
-    anime_db.ani_db.api.protover: 1
-    anime_db.ani_db.image_prefix: 'http://img7.anidb.net/pics/anime/'
     anime_db.ani_db.cache.dir: '%kernel.cache_dir%/ani_db_response/'
     anime_db.ani_db.cache.requests:
         anime: '+1 week'

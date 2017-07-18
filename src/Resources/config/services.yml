@@ -8,8 +8,8 @@ services:
         arguments:
             - '@anime_db.ani_db.browser.client'
             - '%anime_db.ani_db.host%'
-            - '%anime_db.ani_db.api.host%'
-            - '%anime_db.ani_db.image_prefix%'
+            - ~
+            - ~
 
     anime_db.ani_db.browser.response_repair:
         class: AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair

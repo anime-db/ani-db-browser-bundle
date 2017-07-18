@@ -33,7 +33,21 @@ class AnimeDbAniDbBrowserExtension extends Extension
             ->getDefinition('anime_db.ani_db.browser.client.guzzle.request_configurator')
             ->addMethodCall('setAppVersion', [$config['app']['version']])
             ->addMethodCall('setAppClient', [$config['app']['client']])
-            ->addMethodCall('setAppCode', [$config['app']['code']]);
+            ->addMethodCall('setAppCode', [$config['app']['code']])
+        ;
+        $container->getDefinition('anime_db.ani_db.browser.client.guzzle.guzzle')->replaceArgument(0, [
+            'base_uri' => $config['api']['host']
+        ]);
+        $container->getDefinition('anime_db.ani_db.browser')
+            ->replaceArgument(2, $config['api']['host'])
+            ->replaceArgument(3, $config['image_prefix'])
+        ;
+        $container->getDefinition('anime_db.ani_db.browser.client.guzzle')
+            ->replaceArgument(3, $config['api']['prefix'])
+        ;
+        $container->getDefinition('anime_db.ani_db.browser.client.guzzle.request_configurator')->setMethodCalls([
+            'setProtocolVersion' => [$config['api']['protover']],
+        ]);
 
         $container->setAlias('anime_db.ani_db.browser.client', $this->realClientServiceName($config['client']));
     }

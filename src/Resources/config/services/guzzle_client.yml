@@ -5,16 +5,12 @@ services:
             - '@anime_db.ani_db.browser.client.guzzle.guzzle'
             - '@anime_db.ani_db.browser.client.guzzle.request_configurator'
             - '@anime_db.ani_db.browser.response_repair'
-            - '%anime_db.ani_db.api.prefix%'
+            - ~
 
     anime_db.ani_db.browser.client.guzzle.guzzle:
         class: GuzzleHttp\Client
-        arguments:
-            - base_uri: '%anime_db.ani_db.api.host%'
         public: false
 
     anime_db.ani_db.browser.client.guzzle.request_configurator:
         class: AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Guzzle\RequestConfigurator
-        calls:
-            - [setProtocolVersion, ['%anime_db.ani_db.api.protover%']]
         public: false

@@ -22,6 +22,11 @@ class Configuration implements ConfigurationInterface
      *
      * anime_db_ani_db_browser:
      *     client: 'cache'
+     *     image_prefix: 'http://img7.anidb.net/pics/anime/'
+     *     api:
+     *         host: 'http://api.anidb.net:9001'
+     *         prefix: '/httpapi/'
+     *         protover: 1
      *     app:
      *         version: 2
      *         client: 'animedbplugin'
@@ -38,8 +43,13 @@ class Configuration implements ConfigurationInterface
                         ->cannotBeEmpty()
                         ->defaultValue('cache')
                     ->end()
+                    ->scalarNode('image_prefix')
+                        ->defaultValue('http://img7.anidb.net/pics/anime/')
+                        ->cannotBeEmpty()
+                    ->end()
                 ->end()
-                ->append($this->getApp())
+                ->append($this->api())
+                ->append($this->app())
             ->end()
         ;
     }
@@ -47,7 +57,33 @@ class Configuration implements ConfigurationInterface
     /**
      * @return ArrayNodeDefinition
      */
-    protected function getApp()
+    protected function api()
+    {
+        return (new TreeBuilder())
+            ->root('app')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->scalarNode('host')
+                        ->defaultValue('http://api.anidb.net:9001')
+                        ->cannotBeEmpty()
+                    ->end()
+                    ->scalarNode('prefix')
+                        ->defaultValue('/httpapi/')
+                        ->cannotBeEmpty()
+                    ->end()
+                    ->integerNode('protover')
+                        ->defaultValue('1')
+                        ->cannotBeEmpty()
+                    ->end()
+                ->end()
+                ->isRequired()
+            ;
+    }
+
+    /**
+     * @return ArrayNodeDefinition
+     */
+    protected function app()
     {
         return (new TreeBuilder())
             ->root('app')

@@ -1,4 +1,4 @@
-![Browser for AniDB.net](http://anime-db.org/bundles/animedboffsite/images/anidb.net.png)
+[![Browser for AniDB.net](http://anime-db.org/bundles/animedboffsite/images/anidb.net.png)](http://anidb.net/)
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/anime-db/ani-db-browser-bundle.svg?maxAge=3600&label=stable)](https://packagist.org/packages/anime-db/ani-db-browser-bundle)
 [![Total Downloads](https://img.shields.io/packagist/dt/anime-db/ani-db-browser-bundle.svg?maxAge=3600)](https://packagist.org/packages/anime-db/ani-db-browser-bundle)
@@ -47,6 +47,23 @@ anime_db_ani_db_browser:
     # Used client (guzzle, cache).
     # You can create a custom client. See below for instructions on creating your own client.
     client: 'cache'
+
+    # Prefix for image paths
+    # As a default used 'http://img7.anidb.net/pics/anime/'
+    image_prefix: 'http://img7.anidb.net/pics/anime/'
+
+    api:
+        # API host
+        # As a default used 'http://api.anidb.net:9001'
+        host: 'http://api.anidb.net:9001'
+
+        # Prefix for API resurces
+        # As a default used '/httpapi/'
+        prefix: '/httpapi/'
+
+        # API version
+        # As a default used '1'
+        protover: 1
 
     # You must register a client and use it here.
     # See for more info:
