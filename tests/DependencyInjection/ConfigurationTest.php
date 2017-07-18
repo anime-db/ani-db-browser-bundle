@@ -13,7 +13,6 @@ namespace AnimeDb\Bundle\AniDbBrowserBundle\Tests\DependencyInjection;
 use AnimeDb\Bundle\AniDbBrowserBundle\DependencyInjection\Configuration;
 use Symfony\Component\Config\Definition\ArrayNode;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\IntegerNode;
 use Symfony\Component\Config\Definition\ScalarNode;
 
 class ConfigurationTest extends \PHPUnit_Framework_TestCase
