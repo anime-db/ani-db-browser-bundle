@@ -5,6 +5,10 @@ sudo: false
 notifications:
     email: deploy@anime-db.org
 
+branches:
+  except:
+    - /^analysis-.*$/
+
 matrix:
     fast_finish: true
     include:
