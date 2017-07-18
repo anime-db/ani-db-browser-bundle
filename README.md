@@ -12,6 +12,8 @@
 Browser for AniDB.net
 =====================
 
+Read API documentation here: http://wiki.anidb.net/w/HTTP_API_Definition
+
 ## Installation
 
 Pretty simple with [Composer](http://packagist.org), run:

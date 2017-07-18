@@ -10,11 +10,6 @@
 
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Cache;
 
-/**
- * ExpireResolver.
- *
- * @see http://wiki.anidb.net/w/HTTP_API_Definition
- */
 class ExpireResolver
 {
     /**
