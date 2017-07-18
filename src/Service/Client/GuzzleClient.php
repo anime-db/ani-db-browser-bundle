@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AnimeDb package.
  *
@@ -36,10 +37,10 @@ class GuzzleClient implements ClientInterface
     protected $url;
 
     /**
-     * @param Client $client
+     * @param Client              $client
      * @param RequestConfigurator $configurator
-     * @param ResponseRepair $repair
-     * @param string $api_prefix
+     * @param ResponseRepair      $repair
+     * @param string              $api_prefix
      */
     public function __construct(
         Client $client,
@@ -79,7 +80,7 @@ class GuzzleClient implements ClientInterface
 
     /**
      * @param string $request
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      */

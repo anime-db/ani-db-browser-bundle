@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AnimeDb package.
  *
@@ -42,9 +43,9 @@ class Browser
 
     /**
      * @param ClientInterface $client
-     * @param string $host
-     * @param string $api_host
-     * @param string $image_prefix
+     * @param string          $host
+     * @param string          $api_host
+     * @param string          $image_prefix
      */
     public function __construct(ClientInterface $client, $host, $api_host, $image_prefix)
     {
@@ -112,7 +113,7 @@ class Browser
 
     /**
      * @param string $request
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      */
@@ -123,7 +124,7 @@ class Browser
 
     /**
      * @param string $request
-     * @param array $params
+     * @param array  $params
      *
      * @return Crawler
      */

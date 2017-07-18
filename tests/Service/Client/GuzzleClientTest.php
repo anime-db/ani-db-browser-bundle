@@ -21,27 +21,27 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|Client
      */
-    protected $guzzle;
+    private $guzzle;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|RequestConfigurator
      */
-    protected $configurator;
+    private $configurator;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|ResponseRepair
      */
-    protected $repair;
+    private $repair;
 
     /**
      * @var GuzzleClient
      */
-    protected $client;
+    private $client;
 
     /**
      * @var string
      */
-    protected $api_prefix = '/foo/bar';
+    private $api_prefix = '/foo/bar';
 
     protected function setUp()
     {
@@ -59,7 +59,8 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('setTimeout')
             ->with($timeout)
-            ->will($this->returnSelf());
+            ->will($this->returnSelf())
+        ;
 
         $this->assertEquals($this->client, $this->client->setTimeout($timeout));
     }
@@ -71,7 +72,8 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('setProxy')
             ->with($proxy)
-            ->will($this->returnSelf());
+            ->will($this->returnSelf())
+        ;
 
         $this->assertEquals($this->client, $this->client->setProxy($proxy));
     }
@@ -90,38 +92,45 @@ class GuzzleClientTest extends \PHPUnit_Framework_TestCase
         $body
             ->expects($this->once())
             ->method('getContents')
-            ->will($this->returnValue($bodyString));
+            ->will($this->returnValue($bodyString))
+        ;
 
         $response = $this
             ->getMockBuilder(ResponseInterface::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
         $response
             ->expects($this->once())
             ->method('getBody')
-            ->will($this->returnValue($body));
+            ->will($this->returnValue($body))
+        ;
 
         $this->guzzle
             ->expects($this->once())
             ->method('request')
             ->with('GET', $this->api_prefix, $options)
-            ->will($this->returnValue($response));
+            ->will($this->returnValue($response))
+        ;
 
         $this->configurator
             ->expects($this->once())
             ->method('withRequest')
             ->with($request, $params)
-            ->will($this->returnSelf());
+            ->will($this->returnSelf())
+        ;
         $this->configurator
             ->expects($this->once())
             ->method('getOptions')
-            ->will($this->returnValue($options));
+            ->will($this->returnValue($options))
+        ;
 
         $this->repair
             ->expects($this->once())
             ->method('repair')
             ->with($bodyString)
-            ->will($this->returnValue($body_repair));
+            ->will($this->returnValue($body_repair))
+        ;
 
         $this->assertEquals($body_repair, $this->client->get($request, $params));
     }

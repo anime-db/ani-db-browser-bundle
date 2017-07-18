@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AnimeDb package.
  *
@@ -30,8 +31,8 @@ class CacheClient implements ClientInterface
     protected $storage;
 
     /**
-     * @param ClientInterface $client
-     * @param ExpireResolver $resolver
+     * @param ClientInterface  $client
+     * @param ExpireResolver   $resolver
      * @param StorageInterface $storage
      */
     public function __construct(ClientInterface $client, ExpireResolver $resolver, StorageInterface $storage)
@@ -67,7 +68,7 @@ class CacheClient implements ClientInterface
 
     /**
      * @param string $request
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      */

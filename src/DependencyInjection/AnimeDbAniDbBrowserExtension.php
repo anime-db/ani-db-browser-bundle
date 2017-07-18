@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AnimeDb package.
  *
@@ -17,7 +18,7 @@ use Symfony\Component\DependencyInjection\Loader;
 class AnimeDbAniDbBrowserExtension extends Extension
 {
     /**
-     * @param array $configs
+     * @param array            $configs
      * @param ContainerBuilder $container
      */
     public function load(array $configs, ContainerBuilder $container)

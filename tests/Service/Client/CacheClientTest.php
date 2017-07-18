@@ -19,22 +19,22 @@ class CacheClientTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|ClientInterface
      */
-    protected $client;
+    private $client;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|ExpireResolver
      */
-    protected $resolver;
+    private $resolver;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|StorageInterface
      */
-    protected $storage;
+    private $storage;
 
     /**
      * @var CacheClient
      */
-    protected $cache_client;
+    private $cache_client;
 
     protected function setUp()
     {
@@ -42,9 +42,9 @@ class CacheClientTest extends \PHPUnit_Framework_TestCase
         $this->resolver = $this
             ->getMockBuilder(ExpireResolver::class)
             ->disableOriginalConstructor()
-            ->getMock();
-        $this->storage = $this
-            ->getMock(StorageInterface::class);
+            ->getMock()
+        ;
+        $this->storage = $this->getMock(StorageInterface::class);
 
         $this->cache_client = new CacheClient($this->client, $this->resolver, $this->storage);
     }
@@ -56,7 +56,8 @@ class CacheClientTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('setTimeout')
             ->with($timeout)
-            ->will($this->returnSelf());
+            ->will($this->returnSelf())
+        ;
 
         $this->assertEquals($this->cache_client, $this->cache_client->setTimeout($timeout));
     }
@@ -68,7 +69,8 @@ class CacheClientTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('setProxy')
             ->with($proxy)
-            ->will($this->returnSelf());
+            ->will($this->returnSelf())
+        ;
 
         $this->assertEquals($this->cache_client, $this->cache_client->setProxy($proxy));
     }
@@ -83,17 +85,20 @@ class CacheClientTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getExpire')
             ->with($request, $this->isInstanceOf(\DateTime::class))
-            ->will($this->returnValue(null));
+            ->will($this->returnValue(null))
+        ;
 
         $this->client
             ->expects($this->once())
             ->method('get')
             ->with($request, $params)
-            ->will($this->returnValue($response));
+            ->will($this->returnValue($response))
+        ;
 
         $this->storage
             ->expects($this->never())
-            ->method('get');
+            ->method('get')
+        ;
 
         $this->assertEquals($response, $this->cache_client->get($request, $params));
     }
@@ -126,17 +131,20 @@ class CacheClientTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getExpire')
             ->with($request, $this->isInstanceOf(\DateTime::class))
-            ->will($this->returnValue($expires));
+            ->will($this->returnValue($expires))
+        ;
 
         $this->client
             ->expects($this->never())
-            ->method('get');
+            ->method('get')
+        ;
 
         $this->storage
             ->expects($this->once())
             ->method('get')
             ->with($key)
-            ->will($this->returnValue($response));
+            ->will($this->returnValue($response))
+        ;
 
         $this->assertEquals($response, $this->cache_client->get($request, $params));
     }
@@ -157,24 +165,28 @@ class CacheClientTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getExpire')
             ->with($request, $this->isInstanceOf(\DateTime::class))
-            ->will($this->returnValue($expires));
+            ->will($this->returnValue($expires))
+        ;
 
         $this->client
             ->expects($this->once())
             ->method('get')
             ->with($request, $params)
-            ->will($this->returnValue($response));
+            ->will($this->returnValue($response))
+        ;
 
         $this->storage
             ->expects($this->once())
             ->method('get')
             ->with($key)
-            ->will($this->returnValue(null));
+            ->will($this->returnValue(null))
+        ;
 
         $this->storage
             ->expects($this->once())
             ->method('set')
-            ->with($key, $response, $expires);
+            ->with($key, $response, $expires)
+        ;
 
         $this->assertEquals($response, $this->cache_client->get($request, $params));
     }

@@ -17,26 +17,26 @@ class FileStorageTest extends \PHPUnit_Framework_TestCase
     /**
      * @var Filesystem
      */
-    protected $fs;
+    private $fs;
 
     /**
      * @var FileStorage
      */
-    protected $storage;
+    private $storage;
 
     /**
      * @var string
      */
-    protected $dir = '';
+    private $dir = '';
 
     /**
      * @var string
      */
-    protected $filename = '';
+    private $filename = '';
 
-    protected $key = 'foo';
+    private $key = 'foo';
 
-    protected $data = 'bar';
+    private $data = 'bar';
 
     protected function setUp()
     {

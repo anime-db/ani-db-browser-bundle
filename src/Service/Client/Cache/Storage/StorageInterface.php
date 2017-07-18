@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AnimeDb package.
  *
@@ -19,8 +20,8 @@ interface StorageInterface
     public function get($key);
 
     /**
-     * @param string $key
-     * @param string $data
+     * @param string    $key
+     * @param string    $data
      * @param \DateTime $expires
      */
     public function set($key, $data, \DateTime $expires);

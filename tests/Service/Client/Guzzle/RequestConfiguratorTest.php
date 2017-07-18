@@ -16,7 +16,7 @@ class RequestConfiguratorTest extends \PHPUnit_Framework_TestCase
     /**
      * @var RequestConfigurator
      */
-    protected $configurator;
+    private $configurator;
 
     protected function setUp()
     {
@@ -114,7 +114,8 @@ class RequestConfiguratorTest extends \PHPUnit_Framework_TestCase
             ->setAppClient($app_client)
             ->setAppVersion($app_version)
             ->setProtocolVersion($protocol_version)
-            ->withRequest($request, $query);
+            ->withRequest($request, $query)
+        ;
 
         $this->assertEquals($options, $new->getOptions());
     }

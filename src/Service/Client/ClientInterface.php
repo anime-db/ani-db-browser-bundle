@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AnimeDb package.
  *
@@ -27,7 +28,7 @@ interface ClientInterface
 
     /**
      * @param string $request
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      */

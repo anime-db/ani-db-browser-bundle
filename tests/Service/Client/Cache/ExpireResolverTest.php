@@ -16,12 +16,12 @@ class ExpireResolverTest extends \PHPUnit_Framework_TestCase
     /**
      * @var ExpireResolver
      */
-    protected $resolver;
+    private $resolver;
 
     /**
      * @var array
      */
-    protected $requests = [
+    private $requests = [
         'anime' => '+1 week',
         'categorylist' => '+6 month',
         'randomrecommendation' => null,

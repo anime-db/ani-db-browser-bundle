@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AnimeDb package.
  *
@@ -92,7 +93,7 @@ class RequestConfigurator
 
     /**
      * @param string $request
-     * @param array $query
+     * @param array  $query
      *
      * @return RequestConfigurator
      */

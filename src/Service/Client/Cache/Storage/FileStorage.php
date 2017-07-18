@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AnimeDb package.
  *
@@ -25,7 +26,7 @@ class FileStorage implements StorageInterface
 
     /**
      * @param Filesystem $fs
-     * @param string $cache_dir
+     * @param string     $cache_dir
      */
     public function __construct(Filesystem $fs, $cache_dir)
     {
@@ -49,8 +50,8 @@ class FileStorage implements StorageInterface
     }
 
     /**
-     * @param string $key
-     * @param string $data
+     * @param string    $key
+     * @param string    $data
      * @param \DateTime $expires
      */
     public function set($key, $data, \DateTime $expires)

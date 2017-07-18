@@ -18,44 +18,40 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     /**
      * @var string
      */
-    protected $host = 'host';
+    private $host = 'host';
 
     /**
      * @var string
      */
-    protected $api_host = 'api_host';
+    private $api_host = 'api_host';
 
     /**
      * @var string
      */
-    protected $app_code = 'app_code';
+    private $image_prefix = 'image_prefix';
 
     /**
      * @var string
      */
-    protected $image_prefix = 'image_prefix';
-
-    /**
-     * @var string
-     */
-    protected $xml = '<?xml version="1.0"?><root><text>Hello, world!</text></root>';
+    private $xml = '<?xml version="1.0"?><root><text>Hello, world!</text></root>';
 
     /**
      * @var Browser
      */
-    protected $browser;
+    private $browser;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|ClientInterface
      */
-    protected $client;
+    private $client;
 
     protected function setUp()
     {
         $this->client = $this
             ->getMockBuilder(ClientInterface::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->browser = new Browser($this->client, $this->host, $this->api_host, $this->image_prefix);
     }
@@ -81,7 +77,8 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $this->client
             ->expects($this->once())
             ->method('setTimeout')
-            ->with($timeout);
+            ->with($timeout)
+        ;
 
         $this->assertEquals($this->browser, $this->browser->setTimeout($timeout));
     }
@@ -92,7 +89,8 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $this->client
             ->expects($this->once())
             ->method('setProxy')
-            ->with($proxy);
+            ->with($proxy)
+        ;
 
         $this->assertEquals($this->browser, $this->browser->setProxy($proxy));
     }
@@ -106,7 +104,8 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('get')
             ->with($request, $params)
-            ->will($this->returnValue($this->xml));
+            ->will($this->returnValue($this->xml))
+        ;
 
         $this->assertEquals($this->xml, $this->browser->getContent($request, $params));
     }
@@ -120,7 +119,8 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('get')
             ->with($request, $params)
-            ->will($this->returnValue($this->xml));
+            ->will($this->returnValue($this->xml))
+        ;
 
         $result = $this->browser->getCrawler($request, $params);
 

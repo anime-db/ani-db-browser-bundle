@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AnimeDb package.
  *
@@ -35,7 +36,7 @@ class ExpireResolver
     }
 
     /**
-     * @param string $request
+     * @param string    $request
      * @param \DateTime $date
      *
      * @return \DateTime|null

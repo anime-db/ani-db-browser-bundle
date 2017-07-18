@@ -40,7 +40,8 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->append($this->getApp())
-            ->end();
+            ->end()
+        ;
     }
 
     /**
@@ -63,6 +64,7 @@ class Configuration implements ConfigurationInterface
                         ->isRequired()
                     ->end()
                 ->end()
-                ->isRequired();
+                ->isRequired()
+        ;
     }
 }
