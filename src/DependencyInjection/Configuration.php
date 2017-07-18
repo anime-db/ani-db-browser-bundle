@@ -36,57 +36,39 @@ class Configuration implements ConfigurationInterface
     {
         return (new TreeBuilder())
             ->root('anime_db_ani_db_browser')
-                ->append($this->api())
-                ->append($this->app())
+                ->children()
+                    ->arrayNode('api')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->scalarNode('host')
+                                ->defaultValue('http://api.anidb.net:9001')
+                                ->cannotBeEmpty()
+                            ->end()
+                            ->scalarNode('prefix')
+                                ->defaultValue('/httpapi/')
+                                ->cannotBeEmpty()
+                            ->end()
+                            ->integerNode('protover')
+                                ->defaultValue('1')
+                                ->cannotBeEmpty()
+                            ->end()
+                        ->end()
+                    ->end()
+                    ->arrayNode('app')
+                        ->children()
+                            ->integerNode('version')
+                                ->cannotBeEmpty()
+                            ->end()
+                            ->scalarNode('client')
+                                ->cannotBeEmpty()
+                            ->end()
+                            ->scalarNode('code')
+                                ->cannotBeEmpty()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
-        ;
-    }
-
-    /**
-     * @return ArrayNodeDefinition
-     */
-    protected function api()
-    {
-        return (new TreeBuilder())
-            ->root('app')
-                ->addDefaultsIfNotSet()
-                ->children()
-                    ->scalarNode('host')
-                        ->defaultValue('http://api.anidb.net:9001')
-                        ->cannotBeEmpty()
-                    ->end()
-                    ->scalarNode('prefix')
-                        ->defaultValue('/httpapi/')
-                        ->cannotBeEmpty()
-                    ->end()
-                    ->integerNode('protover')
-                        ->defaultValue('1')
-                        ->cannotBeEmpty()
-                    ->end()
-                ->end()
-                ->isRequired()
-            ;
-    }
-
-    /**
-     * @return ArrayNodeDefinition
-     */
-    protected function app()
-    {
-        return (new TreeBuilder())
-            ->root('app')
-                ->children()
-                    ->integerNode('version')
-                        ->cannotBeEmpty()
-                    ->end()
-                    ->scalarNode('client')
-                        ->cannotBeEmpty()
-                    ->end()
-                    ->scalarNode('code')
-                        ->cannotBeEmpty()
-                    ->end()
-                ->end()
-                ->isRequired()
         ;
     }
 }
