@@ -1,7 +1,6 @@
 ![Browser for AniDB.net](http://anime-db.org/bundles/animedboffsite/images/anidb.net.png)
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/anime-db/ani-db-browser-bundle.svg?maxAge=3600&label=stable)](https://packagist.org/packages/anime-db/ani-db-browser-bundle)
-[![Latest Unstable Version](https://img.shields.io/packagist/vpre/anime-db/ani-db-browser-bundle.svg?maxAge=3600&label=unstable)](https://packagist.org/packages/anime-db/ani-db-browser-bundle)
 [![Total Downloads](https://img.shields.io/packagist/dt/anime-db/ani-db-browser-bundle.svg?maxAge=3600)](https://packagist.org/packages/anime-db/ani-db-browser-bundle)
 [![Build Status](https://img.shields.io/travis/anime-db/ani-db-browser-bundle.svg?maxAge=3600)](https://travis-ci.org/anime-db/ani-db-browser-bundle)
 [![Coverage Status](https://img.shields.io/coveralls/anime-db/ani-db-browser-bundle.svg?maxAge=3600)](https://coveralls.io/github/anime-db/ani-db-browser-bundle?branch=master)
