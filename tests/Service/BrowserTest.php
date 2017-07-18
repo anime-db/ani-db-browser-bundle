@@ -103,7 +103,6 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($xml))
         ;
 
-
         $message = $this->getMock(MessageInterface::class);
         $message
             ->expects($this->once())
