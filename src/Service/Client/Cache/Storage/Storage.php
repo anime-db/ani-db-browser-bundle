@@ -10,7 +10,7 @@
 
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Cache\Storage;
 
-interface StorageInterface
+interface Storage
 {
     /**
      * @param string $key

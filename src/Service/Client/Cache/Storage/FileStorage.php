@@ -12,7 +12,7 @@ namespace AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Cache\Storage;
 
 use Symfony\Component\Filesystem\Filesystem;
 
-class FileStorage implements StorageInterface
+class FileStorage implements Storage
 {
     /**
      * @var Filesystem
