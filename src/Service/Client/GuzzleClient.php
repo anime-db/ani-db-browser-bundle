@@ -12,12 +12,12 @@ namespace AnimeDb\Bundle\AniDbBrowserBundle\Service\Client;
 
 use AnimeDb\Bundle\AniDbBrowserBundle\Service\Client\Guzzle\RequestConfigurator;
 use AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair;
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as HttpClient;
 
 class GuzzleClient implements Client
 {
     /**
-     * @var Client
+     * @var HttpClient
      */
     protected $client;
 
@@ -37,13 +37,13 @@ class GuzzleClient implements Client
     protected $url;
 
     /**
-     * @param Client              $client
+     * @param HttpClient          $client
      * @param RequestConfigurator $configurator
      * @param ResponseRepair      $repair
      * @param string              $api_prefix
      */
     public function __construct(
-        Client $client,
+        HttpClient $client,
         RequestConfigurator $configurator,
         ResponseRepair $repair,
         $api_prefix
