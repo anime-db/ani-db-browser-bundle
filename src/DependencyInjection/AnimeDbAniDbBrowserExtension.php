@@ -35,7 +35,7 @@ class AnimeDbAniDbBrowserExtension extends Extension
             ->addMethodCall('setAppClient', [$config['app']['client']])
             ->addMethodCall('setAppCode', [$config['app']['code']]);
 
-        $container->setAlias('anime_db.ani_db.browser.client', $this->getRealServiceName($config['client']));
+        $container->setAlias('anime_db.ani_db.browser.client', $this->realClientServiceName($config['client']));
     }
 
     /**
@@ -43,7 +43,7 @@ class AnimeDbAniDbBrowserExtension extends Extension
      *
      * @return string
      */
-    protected function getRealServiceName($name)
+    private function realClientServiceName($name)
     {
         if (in_array($name, ['cache', 'guzzle'])) {
             return 'anime_db.ani_db.browser.client.'.$name;
