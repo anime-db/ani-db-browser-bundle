@@ -19,22 +19,22 @@ class GuzzleClient implements Client
     /**
      * @var HttpClient
      */
-    protected $client;
+    private $client;
 
     /**
      * @var RequestConfigurator
      */
-    protected $configurator;
+    private $configurator;
 
     /**
      * @var ResponseRepair
      */
-    protected $repair;
+    private $repair;
 
     /**
      * @var string
      */
-    protected $url;
+    private $url;
 
     /**
      * @param HttpClient          $client

@@ -18,17 +18,17 @@ class CacheClient implements Client
     /**
      * @var Client
      */
-    protected $client;
+    private $client;
 
     /**
      * @var ExpireResolver
      */
-    protected $resolver;
+    private $resolver;
 
     /**
      * @var Storage
      */
-    protected $storage;
+    private $storage;
 
     /**
      * @param Client         $client

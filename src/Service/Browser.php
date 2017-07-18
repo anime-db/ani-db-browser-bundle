@@ -18,22 +18,22 @@ class Browser
     /**
      * @var Client
      */
-    protected $client;
+    private $client;
 
     /**
      * @var string
      */
-    protected $host;
+    private $host;
 
     /**
      * @var string
      */
-    protected $api_host;
+    private $api_host;
 
     /**
      * @var string
      */
-    protected $image_prefix;
+    private $image_prefix;
 
     /**
      * @param Client $client

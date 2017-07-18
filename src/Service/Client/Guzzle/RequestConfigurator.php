@@ -17,7 +17,7 @@ class RequestConfigurator
     /**
      * @var array
      */
-    protected $options = [];
+    private $options = [];
 
     /**
      * @param string $app_code

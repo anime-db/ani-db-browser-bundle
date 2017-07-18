@@ -17,12 +17,12 @@ class FileStorage implements Storage
     /**
      * @var Filesystem
      */
-    protected $fs;
+    private $fs;
 
     /**
      * @var string
      */
-    protected $cache_dir = '';
+    private $cache_dir = '';
 
     /**
      * @param Filesystem $fs
@@ -41,7 +41,7 @@ class FileStorage implements Storage
      */
     public function get($key)
     {
-        $filename = $this->getFilename($key);
+        $filename = $this->filename($key);
         if ($this->fs->exists($filename) && filemtime($filename) >= time()) {
             return file_get_contents($filename);
         }
@@ -56,7 +56,7 @@ class FileStorage implements Storage
      */
     public function set($key, $data, \DateTime $expires)
     {
-        $filename = $this->getFilename($key);
+        $filename = $this->filename($key);
         $this->fs->dumpFile($filename, $data);
         $this->fs->touch($filename, $expires->getTimestamp());
     }
@@ -66,7 +66,7 @@ class FileStorage implements Storage
      *
      * @return string
      */
-    protected function getFilename($key)
+    private function filename($key)
     {
         return $this->cache_dir.md5($key).'.xml';
     }

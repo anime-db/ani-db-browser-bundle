@@ -15,7 +15,7 @@ class ExpireResolver
     /**
      * @var array
      */
-    protected $requests = [];
+    private $requests = [];
 
     /**
      * @var string
