@@ -66,6 +66,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($api['protover']->isRequired());
 
         $this->assertInstanceOf(ArrayNode::class, $children['app']);
+        $this->assertTrue($children['app']->isRequired());
 
         /* @var $app ScalarNode[] */
         $app = $children['app']->getChildren();

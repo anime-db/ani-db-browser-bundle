@@ -66,6 +66,7 @@ class Configuration implements ConfigurationInterface
                                 ->cannotBeEmpty()
                             ->end()
                         ->end()
+                        ->isRequired()
                     ->end()
                 ->end()
             ->end()
