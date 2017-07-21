@@ -112,9 +112,10 @@ class Browser
         $options['protover'] = $this->api_protover;
         $options['clientver'] = $this->app_version;
         $options['client'] = $this->app_client;
-        $options['headers'] = isset($options['headers']) ? $options['headers'] : [];
-        $options['headers']['User-Agent'] = $this->app_code;
-
+        $options['headers'] = array_merge(
+            ['User-Agent' => $this->app_client],
+            isset($options['headers']) ? $options['headers'] : []
+        );
         return $options;
     }
 }
