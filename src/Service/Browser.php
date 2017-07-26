@@ -113,7 +113,7 @@ class Browser
         $options['clientver'] = $this->app_version;
         $options['client'] = $this->app_client;
         $options['headers'] = array_merge(
-            ['User-Agent' => $this->app_client],
+            ['User-Agent' => $this->app_code],
             isset($options['headers']) ? $options['headers'] : []
         );
         return $options;
