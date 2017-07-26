@@ -116,6 +116,7 @@ class Browser
             ['User-Agent' => $this->app_code],
             isset($options['headers']) ? $options['headers'] : []
         );
+
         return $options;
     }
 }
