@@ -10,6 +10,7 @@
 
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Service;
 
+use AnimeDb\Bundle\AniDbBrowserBundle\Util\ErrorDetector;
 use AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair;
 use GuzzleHttp\Client as HttpClient;
 
@@ -24,6 +25,11 @@ class Browser
      * @var ResponseRepair
      */
     private $repair;
+
+    /**
+     * @var ErrorDetector
+     */
+    private $detector;
 
     /**
      * @var string
@@ -58,6 +64,7 @@ class Browser
     /**
      * @param HttpClient     $client
      * @param ResponseRepair $repair
+     * @param ErrorDetector  $detector
      * @param string         $api_host
      * @param string         $api_prefix
      * @param int            $api_protover
@@ -68,6 +75,7 @@ class Browser
     public function __construct(
         HttpClient $client,
         ResponseRepair $repair,
+        ErrorDetector $detector,
         $api_host,
         $api_prefix,
         $api_protover,
@@ -77,6 +85,7 @@ class Browser
     ) {
         $this->client = $client;
         $this->repair = $repair;
+        $this->detector = $detector;
         $this->api_host = $api_host;
         $this->api_prefix = $api_prefix;
         $this->api_protover = $api_protover;
@@ -94,8 +103,12 @@ class Browser
     public function get($request, array $options = [])
     {
         $options = $this->buildOptions($request, $options);
+
         $response = $this->client->request('GET', $this->api_host.$this->api_prefix, $options);
-        $content = $this->repair->repair($response->getBody()->getContents());
+        $content = $response->getBody()->getContents();
+
+        $content = $this->repair->repair($content);
+        $content = $this->detector->detect($content);
 
         return $content;
     }

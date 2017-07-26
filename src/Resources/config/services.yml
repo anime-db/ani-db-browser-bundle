@@ -4,12 +4,17 @@ services:
         arguments:
             - '@anime_db.ani_db.browser.client'
             - '@anime_db.ani_db.browser.response_repair'
+            - '@anime_db.ani_db.browser.response_checker'
             - ~
             - ~
             - ~
             - ~
             - ~
             - ~
+
+    anime_db.ani_db.browser.response_checker:
+        class: AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseChecker
+        public: false
 
     anime_db.ani_db.browser.response_repair:
         class: AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair

@@ -11,6 +11,7 @@
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Tests\Service;
 
 use AnimeDb\Bundle\AniDbBrowserBundle\Service\Browser;
+use AnimeDb\Bundle\AniDbBrowserBundle\Util\ErrorDetector;
 use AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair;
 use GuzzleHttp\Client as HttpClient;
 use Psr\Http\Message\MessageInterface;
@@ -59,6 +60,11 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     private $repair;
 
     /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|ErrorDetector
+     */
+    private $detector;
+
+    /**
      * @var Browser
      */
     private $browser;
@@ -67,10 +73,12 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     {
         $this->client = $this->getMock(HttpClient::class);
         $this->repair = $this->getMock(ResponseRepair::class);
+        $this->detector = $this->getMock(ErrorDetector::class);
 
         $this->browser = new Browser(
             $this->client,
             $this->repair,
+            $this->detector,
             $this->api_host,
             $this->api_prefix,
             $this->api_protover,
@@ -143,6 +151,12 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('repair')
             ->with($xml)
+            ->will($this->returnValue($repair))
+        ;
+        $this->detector
+            ->expects($this->once())
+            ->method('detect')
+            ->with($repair)
             ->will($this->returnValue($repair))
         ;
 
