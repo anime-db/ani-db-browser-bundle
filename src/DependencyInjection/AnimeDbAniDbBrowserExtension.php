@@ -29,12 +29,12 @@ class AnimeDbAniDbBrowserExtension extends Extension
         $config = $this->processConfiguration(new Configuration(), $configs);
 
         $container->getDefinition('anime_db.ani_db.browser')
-            ->replaceArgument(2, $config['api']['host'])
-            ->replaceArgument(3, $config['api']['prefix'])
-            ->replaceArgument(4, $config['api']['protover'])
-            ->replaceArgument(5, $config['app']['version'])
-            ->replaceArgument(6, $config['app']['client'])
-            ->replaceArgument(7, $config['app']['code'])
+            ->replaceArgument(3, $config['api']['host'])
+            ->replaceArgument(4, $config['api']['prefix'])
+            ->replaceArgument(5, $config['api']['protover'])
+            ->replaceArgument(6, $config['app']['version'])
+            ->replaceArgument(7, $config['app']['client'])
+            ->replaceArgument(8, $config['app']['code'])
         ;
     }
 }

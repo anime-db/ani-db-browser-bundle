@@ -108,37 +108,37 @@ class AnimeDbAniDbBrowserExtensionTest extends \PHPUnit_Framework_TestCase
         $browser
             ->expects($this->at(0))
             ->method('replaceArgument')
-            ->with(2, $api_host)
+            ->with(3, $api_host)
             ->will($this->returnSelf())
         ;
         $browser
             ->expects($this->at(1))
             ->method('replaceArgument')
-            ->with(3, $api_prefix)
+            ->with(4, $api_prefix)
             ->will($this->returnSelf())
         ;
         $browser
             ->expects($this->at(2))
             ->method('replaceArgument')
-            ->with(4, $api_protover)
+            ->with(5, $api_protover)
             ->will($this->returnSelf())
         ;
         $browser
             ->expects($this->at(3))
             ->method('replaceArgument')
-            ->with(5, $app_version)
+            ->with(6, $app_version)
             ->will($this->returnSelf())
         ;
         $browser
             ->expects($this->at(4))
             ->method('replaceArgument')
-            ->with(6, $app_client)
+            ->with(7, $app_client)
             ->will($this->returnSelf())
         ;
         $browser
             ->expects($this->at(5))
             ->method('replaceArgument')
-            ->with(7, $app_code)
+            ->with(8, $app_code)
             ->will($this->returnSelf())
         ;
 
