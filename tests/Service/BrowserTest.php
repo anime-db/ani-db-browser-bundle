@@ -96,7 +96,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 '',
-                ['timeout' => 5]
+                ['timeout' => 5],
             ],
             [
                 'Override User Agent', // try override app code
@@ -105,7 +105,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
                         'foo' => 123,
                         'client' => 'bar', // try override client name
                     ],
-                ]
+                ],
             ],
         ];
     }
