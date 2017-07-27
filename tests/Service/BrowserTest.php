@@ -22,32 +22,32 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     /**
      * @var string
      */
-    private $api_host;
+    private $api_host = 'my_api_host';
 
     /**
      * @var string
      */
-    private $api_prefix;
+    private $api_prefix = 'my_api_prefix';
 
     /**
      * @var int
      */
-    private $api_protover;
+    private $api_protover = 'my_api_protover';
 
     /**
      * @var int
      */
-    private $app_version;
+    private $app_version = 'my_app_version';
 
     /**
      * @var string
      */
-    private $app_client;
+    private $app_client = 'my_app_client';
 
     /**
      * @var string
      */
-    private $app_code;
+    private $app_code = 'my_app_code';
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|HttpClient
@@ -91,36 +91,55 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function appClients()
+    public function override()
     {
         return [
-            [''],
-            ['Override User Agent'],
+            [
+                '',
+                ['timeout' => 5]
+            ],
+            [
+                'Override User Agent', // try override app code
+                [
+                    'query' => [
+                        'foo' => 123,
+                        'client' => 'bar', // try override client name
+                    ],
+                ]
+            ],
         ];
     }
 
     /**
-     * @dataProvider appClients
+     * @dataProvider override
      *
-     * @param string $app_client
+     * @param string $app_code
+     * @param array  $params
      */
-    public function testGet($app_client)
+    public function testGet($app_code, array $params)
     {
-        $request = 'foo';
-        $params = ['bar' => 'baz'];
-        $options = $params + [
-            'request' => $request,
-            'protover' => $this->api_protover,
-            'clientver' => $this->app_version,
-            'client' => $this->app_client,
+        $options = [
+            'query' => [
+                'protover' => $this->api_protover,
+                'clientver' => $this->app_version,
+                'client' => $this->app_client,
+            ],
             'headers' => [
                 'User-Agent' => $this->app_code,
             ],
         ];
 
-        if ($app_client) {
-            $options['headers']['User-Agent'] = $app_client;
-            $params['headers']['User-Agent'] = $app_client;
+        if ($app_code) {
+            $options['headers']['User-Agent'] = $app_code;
+            $params['headers']['User-Agent'] = $app_code;
+        }
+
+        foreach ($params as $key => $param) {
+            if (is_array($param) && is_array($options[$key])) {
+                $options[$key] = array_merge($options[$key], $param);
+            } else {
+                $options[$key] = $param;
+            }
         }
 
         $xml = '<?xml version="1.0"?><root><text>Hello, world!</text></root>';
@@ -160,6 +179,6 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($repair))
         ;
 
-        $this->assertEquals($repair, $this->browser->get($request, $params));
+        $this->assertEquals($repair, $this->browser->get($params));
     }
 }

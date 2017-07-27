@@ -88,7 +88,7 @@ Get data for anime [Seikai no Monshou](http://anidb.net/perl-bin/animedb.pl?show
 ([wiki](https://wiki.anidb.info/w/HTTP_API_Definition#Anime)):
 
 ```php
-$content = $browser->get('anime?aid=1');
+$content = $browser->get(['query' => ['request' => 'anime', 'aid' => 1]]);
 ```
 
 Catch exceptions

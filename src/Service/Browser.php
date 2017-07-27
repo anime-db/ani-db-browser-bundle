@@ -95,14 +95,13 @@ class Browser
     }
 
     /**
-     * @param string $request
-     * @param array  $options
+     * @param array $options
      *
      * @return string
      */
-    public function get($request, array $options = [])
+    public function get(array $options)
     {
-        $options = $this->buildOptions($request, $options);
+        $options = $this->options($options);
 
         $response = $this->client->request('GET', $this->api_host.$this->api_prefix, $options);
         $content = $response->getBody()->getContents();
@@ -114,19 +113,25 @@ class Browser
     }
 
     /**
-     * @param string $request
-     * @param array  $options
+     * @param array $options
      *
      * @return array
      */
-    private function buildOptions($request, array $options = [])
+    private function options(array $options = [])
     {
-        $options['request'] = $request;
-        $options['protover'] = $this->api_protover;
-        $options['clientver'] = $this->app_version;
-        $options['client'] = $this->app_client;
+        $options['query'] = array_merge(
+            [
+                'protover' => $this->api_protover,
+                'clientver' => $this->app_version,
+                'client' => $this->app_client,
+            ],
+            isset($options['query']) ? $options['query'] : []
+        );
+
         $options['headers'] = array_merge(
-            ['User-Agent' => $this->app_code],
+            [
+                'User-Agent' => $this->app_code,
+            ],
             isset($options['headers']) ? $options['headers'] : []
         );
 
