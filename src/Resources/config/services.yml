@@ -3,7 +3,7 @@ services:
         class: AnimeDb\Bundle\AniDbBrowserBundle\Service\Browser
         arguments:
             - '@anime_db.ani_db.browser.client'
-            - '@anime_db.ani_db.browser.response_repair'
+            - '@anime_db.ani_db.browser.error_detector'
             - '@anime_db.ani_db.browser.response_checker'
             - ~
             - ~
@@ -12,8 +12,8 @@ services:
             - ~
             - ~
 
-    anime_db.ani_db.browser.response_checker:
-        class: AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseChecker
+    anime_db.ani_db.browser.error_detector:
+        class: AnimeDb\Bundle\AniDbBrowserBundle\Util\ErrorDetector
         public: false
 
     anime_db.ani_db.browser.response_repair:
