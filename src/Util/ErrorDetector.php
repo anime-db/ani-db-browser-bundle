@@ -23,17 +23,19 @@ class ErrorDetector
      */
     public function detect($response)
     {
-        if (!preg_match('/<body><error>([^<>]+)<\/error><\/body>/im', $response, $match)) {
+        if (strpos($response, '<body><error>') === false) {
             return $response;
         }
 
-        switch ($match[1]) {
+        $error = preg_replace('/^.*<body><error>([^<>]+)<\/error><\/body>.*$/ims', '$1', $response);
+
+        switch ($error) {
             case 'Banned':
                 throw BannedException::banned();
             case 'Anime not found':
                 throw NotFoundException::anime();
             default:
-                throw ErrorException::error($match[1]);
+                throw ErrorException::error($error);
         }
     }
 }
