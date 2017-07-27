@@ -30,13 +30,10 @@ class ErrorDetector
         switch ($match[1]) {
             case 'Banned':
                 throw BannedException::banned();
-                break;
             case 'Anime not found':
                 throw NotFoundException::anime();
-                break;
             default:
                 throw ErrorException::error($match[1]);
-                break;
         }
     }
 }
