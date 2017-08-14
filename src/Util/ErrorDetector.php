@@ -27,7 +27,7 @@ class ErrorDetector
             return $response;
         }
 
-        $error = preg_replace('/<error>([^<]+)<\/error>/im', '$1', $response);
+        $error = preg_replace('/^.*<error>([^<]+)<\/error>.*$/ims', '$1', $response);
 
         switch ($error) {
             case 'Banned':
