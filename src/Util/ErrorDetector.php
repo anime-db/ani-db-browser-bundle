@@ -23,11 +23,11 @@ class ErrorDetector
      */
     public function detect($response)
     {
-        if (strpos($response, '<body><error>') === false) {
+        if (stripos($response, '<error>') === false) {
             return $response;
         }
 
-        $error = preg_replace('/^.*<body><error>([^<>]+)<\/error><\/body>.*$/ims', '$1', $response);
+        $error = preg_replace('/<error>([^<]+)<\/error>/im', '$1', $response);
 
         switch ($error) {
             case 'Banned':
