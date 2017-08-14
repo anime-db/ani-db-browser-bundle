@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AnimeDb package.
  *
@@ -6,276 +7,178 @@
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
+
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Tests\Service;
 
 use AnimeDb\Bundle\AniDbBrowserBundle\Service\Browser;
-use AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse;
+use AnimeDb\Bundle\AniDbBrowserBundle\Util\ErrorDetector;
 use AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair;
-use Guzzle\Http\Client;
-use Guzzle\Http\Message\RequestInterface;
-use Guzzle\Http\Message\Response;
-use Symfony\Component\DomCrawler\Crawler;
+use GuzzleHttp\Client as HttpClient;
+use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\StreamInterface;
 
 class BrowserTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var string
      */
-    protected $host = 'host';
+    private $api_host = 'my_api_host';
 
     /**
      * @var string
      */
-    protected $api_prefix = 'api_prefix';
+    private $api_prefix = 'my_api_prefix';
+
+    /**
+     * @var int
+     */
+    private $api_protover = 'my_api_protover';
+
+    /**
+     * @var int
+     */
+    private $app_version = 'my_app_version';
 
     /**
      * @var string
      */
-    protected $api_client = 'api_client';
+    private $app_client = 'my_app_client';
 
     /**
      * @var string
      */
-    protected $api_clientver = 'api_clientver';
+    private $app_code = 'my_app_code';
 
     /**
-     * @var string
+     * @var \PHPUnit_Framework_MockObject_MockObject|HttpClient
      */
-    protected $api_protover = 'api_protover';
-
-    /**
-     * @var string
-     */
-    protected $app_code = 'app_code';
-
-    /**
-     * @var string
-     */
-    protected $image_prefix = 'image_prefix';
-
-    /**
-     * @var string
-     */
-    protected $xml = '<?xml version="1.0"?><root><text>Hello, world!</text></root>';
-
-    /**
-     * @var Browser
-     */
-    protected $browser;
-
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|Client
-     */
-    protected $client;
-
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|CacheResponse
-     */
-    protected $cache;
-
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|RequestInterface
-     */
-    protected $request;
-
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|Response
-     */
-    protected $response;
+    private $client;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|ResponseRepair
      */
-    protected $response_repair;
+    private $repair;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|ErrorDetector
+     */
+    private $detector;
+
+    /**
+     * @var Browser
+     */
+    private $browser;
 
     protected function setUp()
     {
-        $this->client = $this
-            ->getMockBuilder('Guzzle\Http\Client')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->cache = $this
-            ->getMockBuilder('AnimeDb\Bundle\AniDbBrowserBundle\Service\CacheResponse')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->request = $this->getMock('Guzzle\Http\Message\RequestInterface');
-        $this->response_repair = $this->getMock('AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair');
-        $this->response = $this
-            ->getMockBuilder('Guzzle\Http\Message\Response')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->client = $this->getMock(HttpClient::class);
+        $this->repair = $this->getMock(ResponseRepair::class);
+        $this->detector = $this->getMock(ErrorDetector::class);
 
         $this->browser = new Browser(
             $this->client,
-            $this->response_repair,
-            $this->host,
+            $this->repair,
+            $this->detector,
+            $this->api_host,
             $this->api_prefix,
-            $this->api_client,
-            $this->api_clientver,
             $this->api_protover,
-            $this->app_code,
-            $this->image_prefix
-        );
-    }
-
-    public function testGetImageUrl()
-    {
-        $this->assertEquals($this->image_prefix.'foo', $this->browser->getImageUrl('foo'));
-    }
-
-    public function testGetHost()
-    {
-        $this->assertEquals($this->host, $this->browser->getHost());
-    }
-
-    public function testGetApiHost()
-    {
-        $this->client
-            ->expects($this->once())
-            ->method('getBaseUrl')
-            ->will($this->returnValue('foo'));
-        $this->assertEquals('foo', $this->browser->getApiHost());
-    }
-
-    public function testSetTimeout()
-    {
-        $timeout = 123;
-        $this->client
-            ->expects($this->once())
-            ->method('setDefaultOption')
-            ->with('timeout', $timeout);
-        $this->assertEquals(
-            $this->browser,
-            $this->browser->setTimeout($timeout)
-        );
-    }
-
-    public function testSetProxy()
-    {
-        $proxy = '127.0.0.1';
-        $this->client
-            ->expects($this->once())
-            ->method('setDefaultOption')
-            ->with('proxy', $proxy);
-        $this->assertEquals(
-            $this->browser,
-            $this->browser->setProxy($proxy)
+            $this->app_version,
+            $this->app_client,
+            $this->app_code
         );
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @return array
      */
-    public function testGetFailedTransport()
+    public function override()
     {
-        $this->buildDialogue('foo', ['bar' => 'baz']);
-        $this->browser->getCrawler('foo', ['bar' => 'baz']);
-    }
-
-    public function testGet()
-    {
-        $this->buildDialogue('foo', ['bar' => 'baz'], $this->xml);
-        $result = $this->browser->getCrawler('foo', ['bar' => 'baz']);
-
-        $this->assertInstanceOf('\Symfony\Component\DomCrawler\Crawler', $result);
-
-        // objects are not identical, but their content should match
-        $expected = new Crawler($this->xml);
-        $this->assertEquals($expected->html(), $result->html());
-    }
-
-    /**
-     * @param string $request
-     * @param array $params
-     * @param string $data
-     */
-    protected function buildDialogue($request, array $params, $data = '')
-    {
-        $this->client
-            ->expects($this->once())
-            ->method('get')
-            ->with($this->getUrl($request, $params))
-            ->will($this->returnValue($this->request));
-        $this->request
-            ->expects($this->once())
-            ->method('setHeader')
-            ->with('User-Agent', $this->app_code)
-            ->will($this->returnValue($this->request));
-        $this->request
-            ->expects($this->once())
-            ->method('send')
-            ->will($this->returnValue($this->response));
-        $this->response
-            ->expects($this->once())
-            ->method('isError')
-            ->will($this->returnValue(!$data));
-
-        if ($data) {
-            $this->response
-                ->expects($this->once())
-                ->method('getBody')
-                ->with(true)
-                ->will($this->returnValue(gzencode($data)));
-            $this->response_repair
-                ->expects($this->once())
-                ->method('repair')
-                ->with($data)
-                ->will($this->returnValue($data));
-        } else {
-            $this->response
-                ->expects($this->never())
-                ->method('getBody');
-            $this->response_repair
-                ->expects($this->never())
-                ->method('repair');
-        }
+        return [
+            [
+                '',
+                ['timeout' => 5],
+            ],
+            [
+                'Override User Agent', // try override app code
+                [
+                    'query' => [
+                        'foo' => 123,
+                        'client' => 'bar', // try override client name
+                    ],
+                ],
+            ],
+        ];
     }
 
     /**
-     * @param string $request
-     * @param array $params
+     * @dataProvider override
      *
-     * @return string
+     * @param string $app_code
+     * @param array  $params
      */
-    protected function getUrl($request, array $params)
+    public function testGet($app_code, array $params)
     {
-        return $this->api_prefix.
-            (strpos($this->api_prefix, '?') !== false ? '&' : '?').
-            http_build_query(array_merge([
-                'client' => $this->api_client,
-                'clientver' => $this->api_clientver,
+        $options = [
+            'query' => [
                 'protover' => $this->api_protover,
-                'request' => $request,
-            ], $params));
-    }
+                'clientver' => $this->app_version,
+                'client' => $this->app_client,
+            ],
+            'headers' => [
+                'User-Agent' => $this->app_code,
+            ],
+        ];
 
-    public function testGetForce()
-    {
-        $this->cache
-            ->expects($this->never())
-            ->method('get');
-        $this->cache
+        if ($app_code) {
+            $options['headers']['User-Agent'] = $app_code;
+            $params['headers']['User-Agent'] = $app_code;
+        }
+
+        foreach ($params as $key => $param) {
+            if (is_array($param) && is_array($options[$key])) {
+                $options[$key] = array_merge($options[$key], $param);
+            } else {
+                $options[$key] = $param;
+            }
+        }
+
+        $xml = '<?xml version="1.0"?><root><text>Hello, world!</text></root>';
+        $repair = 'foo';
+
+        $stream = $this->getMock(StreamInterface::class);
+        $stream
             ->expects($this->once())
-            ->method('set')
-            ->with('foo', $this->getUrl('foo', ['bar' => 'baz']), $this->xml);
+            ->method('getContents')
+            ->will($this->returnValue($xml))
+        ;
 
-        $this->browser->setResponseCache($this->cache);
-        $this->buildDialogue('foo', ['bar' => 'baz'], $this->xml);
-        $this->browser->getCrawler('foo', ['bar' => 'baz'], true);
-    }
-
-    public function testGetFromCache()
-    {
-        $this->cache
+        $message = $this->getMock(MessageInterface::class);
+        $message
             ->expects($this->once())
-            ->method('get')
-            ->with($this->getUrl('foo', ['bar' => 'baz']))
-            ->will($this->returnValue($this->xml));
-        $this->cache
-            ->expects($this->never())
-            ->method('set');
+            ->method('getBody')
+            ->will($this->returnValue($stream))
+        ;
 
-        $this->browser->setResponseCache($this->cache);
-        $this->browser->getCrawler('foo', ['bar' => 'baz']);
+        $this->client
+            ->expects($this->once())
+            ->method('request')
+            ->with('GET', $this->api_host.$this->api_prefix, $options)
+            ->will($this->returnValue($message))
+        ;
+
+        $this->repair
+            ->expects($this->once())
+            ->method('repair')
+            ->with($xml)
+            ->will($this->returnValue($repair))
+        ;
+        $this->detector
+            ->expects($this->once())
+            ->method('detect')
+            ->with($repair)
+            ->will($this->returnValue($repair))
+        ;
+
+        $this->assertEquals($repair, $this->browser->get($params));
     }
 }

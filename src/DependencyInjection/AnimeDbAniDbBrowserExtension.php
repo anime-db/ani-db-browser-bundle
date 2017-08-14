@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AnimeDb package.
  *
@@ -6,6 +7,7 @@
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
+
 namespace AnimeDb\Bundle\AniDbBrowserBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -16,13 +18,23 @@ use Symfony\Component\DependencyInjection\Loader;
 class AnimeDbAniDbBrowserExtension extends Extension
 {
     /**
-     * @param array $configs
+     * @param array            $configs
      * @param ContainerBuilder $container
      */
     public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('parameters.yml');
         $loader->load('services.yml');
+
+        $config = $this->processConfiguration(new Configuration(), $configs);
+
+        $container->getDefinition('anime_db.ani_db.browser')
+            ->replaceArgument(3, $config['api']['host'])
+            ->replaceArgument(4, $config['api']['prefix'])
+            ->replaceArgument(5, $config['api']['protover'])
+            ->replaceArgument(6, $config['app']['version'])
+            ->replaceArgument(7, $config['app']['client'])
+            ->replaceArgument(8, $config['app']['code'])
+        ;
     }
 }

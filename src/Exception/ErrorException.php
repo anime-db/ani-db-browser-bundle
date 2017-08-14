@@ -8,17 +8,17 @@
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
 
-namespace AnimeDb\Bundle\AniDbBrowserBundle\Util;
+namespace AnimeDb\Bundle\AniDbBrowserBundle\Exception;
 
-class ResponseRepair
+class ErrorException extends \RuntimeException
 {
     /**
-     * @param string $content
+     * @param string $message
      *
-     * @return string
+     * @return ErrorException
      */
-    public function repair($content)
+    public static function error($message)
     {
-        return str_replace("\xf0\x9d\x84\x87", '', $content); // \u1D107
+        return new self($message);
     }
 }

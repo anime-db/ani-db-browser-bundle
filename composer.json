@@ -1,29 +1,36 @@
 {
-    "name" : "anime-db/ani-db-browser-bundle",
-    "license" : "GPL-3.0",
-    "type" : "library",
-    "description" : "Plugin AniDB for the catalog Anime DB",
-    "homepage" : "http://github.com/anime-db/ani-db-browser-bundle",
-    "autoload" : {
-        "psr-4" : {
-            "AnimeDb\\Bundle\\AniDbBrowserBundle\\" : "src/"
+    "name": "anime-db/ani-db-browser-bundle",
+    "license": "GPL-3.0",
+    "type": "library",
+    "description": "Plugin AniDB for the catalog Anime DB",
+    "homepage": "http://github.com/anime-db/ani-db-browser-bundle",
+    "autoload": {
+        "psr-4": {
+            "AnimeDb\\Bundle\\AniDbBrowserBundle\\": "src/"
         }
     },
-    "autoload-dev" : {
-        "psr-4" : {
-            "AnimeDb\\Bundle\\AniDbBrowserBundle\\Tests\\" : "tests/"
+    "autoload-dev": {
+        "psr-4": {
+            "AnimeDb\\Bundle\\AniDbBrowserBundle\\Tests\\": "tests/"
         }
     },
-    "require" : {
-        "php" : ">=5.4",
-        "ext-zlib" : "*",
-        "guzzle/guzzle" : "3.9.*",
-        "symfony/dom-crawler" : ">=2.3.17"
+    "require": {
+        "php": ">=5.5",
+        "ext-zlib": "*",
+        "guzzlehttp/guzzle": "~6.2"
     },
-    "require-dev" : {
-        "symfony/dependency-injection" : ">=2.3.17",
-        "symfony/expression-language" : ">=2.3.17",
-        "symfony/config" : ">=2.3.17",
-        "symfony/http-kernel" : ">=2.3.17"
+    "require-dev": {
+        "symfony/dependency-injection": "~2.3|~3.0",
+        "symfony/expression-language": "~2.3|~3.0",
+        "symfony/config": "~2.3|~3.0",
+        "symfony/http-kernel": "~2.3|~3.0",
+        "phpunit/phpunit": "~4.8",
+        "scrutinizer/ocular": "~1.3",
+        "satooshi/php-coveralls": "^1.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0-dev"
+        }
     }
 }

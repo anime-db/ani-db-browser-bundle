@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AnimeDb package.
  *
@@ -6,24 +7,34 @@
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
  */
+
 namespace AnimeDb\Bundle\AniDbBrowserBundle\Service;
 
+use AnimeDb\Bundle\AniDbBrowserBundle\Util\ErrorDetector;
 use AnimeDb\Bundle\AniDbBrowserBundle\Util\ResponseRepair;
-use Symfony\Component\DomCrawler\Crawler;
-use Guzzle\Http\Client;
+use GuzzleHttp\Client as HttpClient;
 
-/**
- * Browser.
- *
- * @link http://anidb.net/
- * @link http://wiki.anidb.net/w/HTTP_API_Definition
- */
 class Browser
 {
     /**
+     * @var HttpClient
+     */
+    private $client;
+
+    /**
+     * @var ResponseRepair
+     */
+    private $repair;
+
+    /**
+     * @var ErrorDetector
+     */
+    private $detector;
+
+    /**
      * @var string
      */
-    private $host;
+    private $api_host;
 
     /**
      * @var string
@@ -31,176 +42,99 @@ class Browser
     private $api_prefix;
 
     /**
+     * @var int
+     */
+    private $api_protover;
+
+    /**
+     * @var int
+     */
+    private $app_version;
+
+    /**
+     * @var string
+     */
+    private $app_client;
+
+    /**
      * @var string
      */
     private $app_code;
 
     /**
-     * @var string
-     */
-    private $image_prefix;
-
-    /**
-     * @var Client
-     */
-    private $client;
-
-    /**
-     * @var CacheResponse
-     */
-    private $cache;
-
-    /**
-     * @var ResponseRepair
-     */
-    private $response_repair;
-
-    /**
-     * @param Client $client
-     * @param ResponseRepair $response_repair
-     * @param string $host
-     * @param string $api_prefix
-     * @param string $api_client
-     * @param string $api_clientver
-     * @param string $api_protover
-     * @param string $app_code
-     * @param string $image_prefix
+     * @param HttpClient     $client
+     * @param ResponseRepair $repair
+     * @param ErrorDetector  $detector
+     * @param string         $api_host
+     * @param string         $api_prefix
+     * @param int            $api_protover
+     * @param int            $app_version
+     * @param string         $app_client
+     * @param string         $app_code
      */
     public function __construct(
-        Client $client,
-        ResponseRepair $response_repair,
-        $host,
+        HttpClient $client,
+        ResponseRepair $repair,
+        ErrorDetector $detector,
+        $api_host,
         $api_prefix,
-        $api_client,
-        $api_clientver,
         $api_protover,
-        $app_code,
-        $image_prefix
+        $app_version,
+        $app_client,
+        $app_code
     ) {
         $this->client = $client;
-        $api_prefix .= strpos($api_prefix, '?') !== false ? '&' : '?';
-        $api_prefix .= http_build_query([
-            'client' => $api_client,
-            'clientver' => $api_clientver,
-            'protover' => $api_protover,
-        ]);
-        $this->host = $host;
+        $this->repair = $repair;
+        $this->detector = $detector;
+        $this->api_host = $api_host;
         $this->api_prefix = $api_prefix;
+        $this->api_protover = $api_protover;
+        $this->app_version = $app_version;
+        $this->app_client = $app_client;
         $this->app_code = $app_code;
-        $this->image_prefix = $image_prefix;
-        $this->response_repair = $response_repair;
     }
 
     /**
-     * @return string
-     */
-    public function getHost()
-    {
-        return $this->host;
-    }
-
-    /**
-     * @return string
-     */
-    public function getApiHost()
-    {
-        return $this->client->getBaseUrl();
-    }
-
-    /**
-     * @param int $timeout
-     *
-     * @return Browser
-     */
-    public function setTimeout($timeout)
-    {
-        $this->client->setDefaultOption('timeout', $timeout);
-
-        return $this;
-    }
-
-    /**
-     * @param string $proxy
-     *
-     * @return Browser
-     */
-    public function setProxy($proxy)
-    {
-        $this->client->setDefaultOption('proxy', $proxy);
-
-        return $this;
-    }
-
-    /**
-     * @param CacheResponse $cache
-     */
-    public function setResponseCache(CacheResponse $cache)
-    {
-        $this->cache = $cache;
-    }
-
-    /**
-     * @deprecated get() is deprecated since AniDbBrowser 2.0. Use getCrawler() instead
-     *
-     * @param string $request
-     * @param array $params
-     * @param bool $force
-     *
-     * @return Crawler
-     */
-    public function get($request, array $params = [], $force = false)
-    {
-        return $this->getCrawler($request, $params, $force);
-    }
-
-    /**
-     * @param string $request
-     * @param array $params
-     * @param bool $force
+     * @param array $options
      *
      * @return string
      */
-    public function getContent($request, array $params = [], $force = false)
+    public function get(array $options)
     {
-        $path = $this->api_prefix.'&request='.$request.($params ? '&'.http_build_query($params) : '');
+        $options = $this->options($options);
 
-        // try get response from cache
-        if ($force || !($this->cache instanceof CacheResponse) || !($response = $this->cache->get($path))) {
-            $response = $this->client->get($path)->setHeader('User-Agent', $this->app_code)->send();
-            if ($response->isError()) {
-                throw new \RuntimeException("Failed execute request '{$request}' to the server '".$this->getApiHost()."'");
-            }
-            $response = gzdecode($response->getBody(true));
-            $response = $this->response_repair->repair($response); // repair
+        $response = $this->client->request('GET', $this->api_host.$this->api_prefix, $options);
+        $content = $response->getBody()->getContents();
 
-            // cache response
-            if ($this->cache instanceof CacheResponse) {
-                $this->cache->set($request, $path, $response);
-            }
-        }
+        $content = $this->repair->repair($content);
+        $content = $this->detector->detect($content);
 
-        return $response;
+        return $content;
     }
 
     /**
-     * @param string $request
-     * @param array $params
-     * @param bool $force
+     * @param array $options
      *
-     * @return Crawler
+     * @return array
      */
-    public function getCrawler($request, array $params = [], $force = false)
+    private function options(array $options = [])
     {
-        return new Crawler($this->getContent($request, $params, $force));
-    }
+        $options['query'] = array_merge(
+            [
+                'protover' => $this->api_protover,
+                'clientver' => $this->app_version,
+                'client' => $this->app_client,
+            ],
+            isset($options['query']) ? $options['query'] : []
+        );
 
-    /**
-     * @param string $image
-     *
-     * @return string
-     */
-    public function getImageUrl($image)
-    {
-        return $this->image_prefix.$image;
+        $options['headers'] = array_merge(
+            [
+                'User-Agent' => $this->app_code,
+            ],
+            isset($options['headers']) ? $options['headers'] : []
+        );
+
+        return $options;
     }
 }
