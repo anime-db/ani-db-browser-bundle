@@ -32,36 +32,49 @@ class ErrorDetectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \AnimeDb\Bundle\AniDbBrowserBundle\Exception\BannedException
+     * @return array
      */
-    public function testBanned()
+    public function responses()
     {
-        $response = '<?xml version="1.0" encoding="UTF-8"?>'.PHP_EOL;
-        $response .= '<body><error>Banned</error></body>';
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>'.PHP_EOL;
 
-        $this->checker->detect($response);
+        return [
+            [$xml.'<body><error>%s</error></body>'],
+            [$xml.'<error>%s</error>'],
+        ];
+    }
+
+    /**
+     * @expectedException \AnimeDb\Bundle\AniDbBrowserBundle\Exception\BannedException
+     * @dataProvider responses
+     *
+     * @param string $response
+     */
+    public function testBanned($response)
+    {
+        $this->checker->detect(sprintf($response, 'Banned'));
     }
 
     /**
      * @expectedException \AnimeDb\Bundle\AniDbBrowserBundle\Exception\NotFoundException
+     * @dataProvider responses
+     *
+     * @param string $response
      */
-    public function testNotFound()
+    public function testNotFound($response)
     {
-        $response = '<?xml version="1.0" encoding="UTF-8"?>'.PHP_EOL;
-        $response .= '<body><error>Anime not found</error></body>';
-
-        $this->checker->detect($response);
+        $this->checker->detect(sprintf($response, 'Anime not found'));
     }
 
     /**
      * @expectedException \AnimeDb\Bundle\AniDbBrowserBundle\Exception\ErrorException
      * @expectedExceptionMessage Foo
+     * @dataProvider responses
+     *
+     * @param string $response
      */
-    public function testError()
+    public function testError($response)
     {
-        $response = '<?xml version="1.0" encoding="UTF-8"?>'.PHP_EOL;
-        $response .= '<body><error>Foo</error></body>';
-
-        $this->checker->detect($response);
+        $this->checker->detect(sprintf($response, 'Foo'));
     }
 }
